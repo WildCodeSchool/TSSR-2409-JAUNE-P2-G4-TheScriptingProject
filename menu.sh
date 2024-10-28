@@ -56,6 +56,7 @@ function menu3()
     echo -e "Vous souhaitez rechercher une \e[1;33minformation\e[0;m sur..."
     echo "1. Un utilisateur"
     echo "2. Un ordinateur client"
+    echo "3. Un événement du fichier log_evt.log"
     echo "0. Revenir en arrière"
     echo "Taper 1, 2 ou 0"
     read -p "" choix
@@ -65,6 +66,9 @@ function menu3()
     ;;
     2)
         menuIC
+    ;;
+    3)
+        echo "Lancement de evt.sh"
     ;;
     0)
         menu1
@@ -143,10 +147,10 @@ function menuAC()
 }
 
 # Fonction Menu des I(nformations) U(tilisateur)
-#function menuIU()
-#{
-
-#}
+function menuIU()
+{
+    echo -e "Lancement de InfoUser.sh"
+}
 
 # Fonction Menu des I(nformations) C(lient)
 #function menuIC()
