@@ -21,7 +21,7 @@ function menu1()
     ;;
     0)
         # Sortie
-        echo -e "\e[1;32mSortie du script\e[0;m"
+        echo -e "\e[1;35mSortie du script\e[0;m"
         exit 0
     ;;
     *)
@@ -52,6 +52,7 @@ function menu2()
     ;;
     0)
         # Retour au Menu principal
+        echo -e "\e[1;32mRetour en arrière\e[0;m"
         menu1
     ;;
     *)
@@ -86,6 +87,7 @@ function menu3()
     ;;
     0)
         # Retour au Menu Principal
+        echo -e "\e[1;32mRetour en arrière\e[0;m"
         menu1
     ;;
     *)
