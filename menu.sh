@@ -12,16 +12,20 @@ function menu1()
 
     case $choix in
     1)
+        # Lancement du menu des Actions
         menu2
     ;;
     2)
+        # Lancement du menu des Informations
         menu3
     ;;
     0)
+        # Sortie
         echo -e "\e[1;32mSortie du script\e[0;m"
         exit 0
     ;;
     *)
+        # Lancement à nouveau de ce menu (optionnel car le script est une boucle while et le ferait quoiqu'il arrive)
         echo -e "\e[0;31mMauvaise entrée. Tapez 1, 2 ou 0 \e[0;m"
         menu1
     ;;
@@ -39,13 +43,21 @@ function menu2()
     read -p "" choix
     case $choix in
     1)
+        # Lancement Menu A(ctions) U(tilisateurs)
         menuAU
     ;;
     2)
+        # Lancement Menu A(ctions) C(lient)
         menuAC
     ;;
     0)
+        # Retour au Menu principal
         menu1
+    ;;
+    *)
+        # Lancement à nouveau de ce menu
+        echo -e "\e[0;31mMauvaise entrée. Tapez 1, 2 ou 0 \e[0;m"
+        menu2
     ;;
     esac
 }
@@ -62,16 +74,24 @@ function menu3()
     read -p "" choix
     case $choix in
     1)
+        # Lancement du Menu des I(nformations) U(tilisateurs)
         menuIU
     ;;
     2)
+        # Lancement du Menu des I(nformations) C(lient)
         menuIC
     ;;
     3)
         echo "Lancement de evt.sh"
     ;;
     0)
+        # Retour au Menu Principal
         menu1
+    ;;
+    *)
+        # Lancement à nouveau de ce menu
+        echo -e "\e[0;31mMauvaise entrée. Tapez 1, 2, 3 ou 0 \e[0;m"
+        menu3
     ;;
     esac
 }
@@ -87,16 +107,22 @@ function menuAU()
     read -p "" choix
     case $choix in
     1)
+        # Lancement du script d'action sur les comptes ?
+        # Ou proposition directe des différentes actions puis redirection vers les différents scripts ?
         echo -e "Action Utilisateur Comptes"
     ;;
     2)
+        # Lancement du script d'action sur les groupes ?
+        # Ou proposition directe des différentes actions puis redirection vers les différents scripts ?
         echo -e "Action Utilisateur Groupes"
     ;;
     0)
+        # Retour au Menu des Actions
         echo -e "\e[1;32mRetour en arrière\e[0;m"
         menu2
     ;;
     *)
+        # Relance de ce menu
         echo -e "\e[0;31mMauvaise entrée. Tapez 1, 2 ou 0 \e[0;m"
         menuAU
     ;;
