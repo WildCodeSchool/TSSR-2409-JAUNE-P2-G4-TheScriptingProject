@@ -141,7 +141,7 @@ function menuAC()
     ;;
     *)
         echo -e "\e[0;31mMauvaise entrée. Tapez 1, 2 ou 0 \e[0;m"
-        menuAU
+        menuAC
     ;;
     esac
 }
