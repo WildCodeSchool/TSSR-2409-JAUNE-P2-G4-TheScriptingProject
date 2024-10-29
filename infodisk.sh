@@ -22,7 +22,7 @@ function disk2()
     #                   Retourner la liste des infos sur le disque sélectionné
     #                   nombre de partitions (
             nbpart=$(df -Th | grep "$disk" | wc -l)
-            echo -e "Il y a $nbpart partitions sur le disque $disk."
+            echo -e "Il y a \e[0;32m$nbpart partitions\e[0;m sur le disque $disk."
     #                   nom des partition
     #                   File System            
     #                   taille de la partition (lsblk | grep part) ou (df -h | grep $disk)
@@ -30,16 +30,19 @@ function disk2()
 
             while read a b c
             do 
-                echo "La partition $a, d'une taille de $b et au format $c"
+                echo -e "La partition \e[0;32m$a\e[0;m, d'une \e[0;32mtaille de $b\e[0;m et \e[0;32mau format $c\e[0;m"
             done < /tmp/part.txt
     #                   Retour au menu des info disques et lecteurs            
     #             Sinon
     else
     #                   message d'erreur le disque sélectionné est inconnue
-        echo "Erreur - Le disque sélectionné est inconnu"
+        echo -e "\e[0;31mErreur - Le disque sélectionné est inconnu\e[0;m"
     #                   afficher liste des disques
         err=$(lsblk | grep disk | awk '{print $1}')
-        echo "Les disques disponibles sont $err"
+
+##### A débugger : fonctionne s'il n'y a qu'un disque, pas s'il y en a plusieurs
+
+        echo -e "\e[0;31mLes disques disponibles sont\e[0;m $err"
     #             fin
     fi
 
@@ -50,9 +53,6 @@ function disk2()
     #                   Alors 
     then
     #   relancer fonction partition
-
-##### A débugger : Si $again n'est pas O, va poser la question 3x avant de sortir de la fonction
-
         disk2
     #                   Sinon fin
     fi
@@ -63,8 +63,8 @@ function disk3()
 {
     #       3)Demander si l'information concerne un disque entier ou une partition
         echo "Vous souhaitez connaître l'espace disponible..."
-        echo "1. ...d'un disque ?"
-        echo "2. ...d'une partition ?"
+        echo -e "1. ...d'un \e[0;36mdisque\e[0;m ?"
+        echo -e "2. ...d'une \e[0;36mpartition\e[0;m ?"
         echo "3. Revenir au menu précédent"
         echo "0. Retour au menu principal"
         read -p "" choix
@@ -136,13 +136,13 @@ function disk3()
 function infodisk()
 {
     #Afficher le menu des informations disponibles
-    echo "Quelle information souhaitez-vous récupérer ?"
-    echo "1-Nombre de disque présent sur l'ordinateur"
-    echo "2-Détail des partitions présente sur un disque"
-    echo "3-Espace disponible"
-    echo "4-Rechercher l'emplacement d'un dossier"
-    echo "5-Liste des lecteurs montés monter sur l'ordinateur"
-    echo "6-Retour au menu précédant"
+    echo -e "Quelle information souhaitez-vous récupérer ?"
+    echo -e "1-\e[0;36mNombre de disques\e[0;m présent sur l'ordinateur"
+    echo -e "2-\e[0;36mDétails des partitions\e[0;m présente sur un disque"
+    echo -e "3-\e[0;36mEspace disponible\e[0;m"
+    echo -e "4-\e[0;36mEmplacement d'un dossier\e[0;m"
+    echo -e "5-\e[0;36mLecteurs montés\e[0;m sur l'ordinateur"
+    echo "6-Retour au menu précédent"
     echo "0-Retour au menu principal"
     #Demander quelle information souhaite obtenir l'utilisateur -> $choixInfoCl
     read -p "" choix
@@ -154,8 +154,8 @@ function infodisk()
     1)
     #       1)Rechercher le nombre de disques présent sur la machine 
     #         Retourner la liste des disques ou le nombre
-        lsblk | grep disk | wc -l
-        lsblk | grep disk
+        disk=$(lsblk | grep disk | wc -l)
+        echo -e "Il y a \e[0;32m$disk disque(s)\e[0;m sur la machine."
     ;;
 
     2)      
@@ -190,7 +190,7 @@ function infodisk()
 
     0)
     #       7)Retour au menu principal
-        echo "Retour au menu principal"
+        echo -e "\e[0;35mRetour au menu principal\e[0;m"
         exit 0
     ;;
 
