@@ -2,66 +2,58 @@
 # Fonction Détail des partitions
 function disk2()
 {
-    #       2)Demander sur quel disque l'utilisateur souhaite avoir le détails du partitionnement
-    read -p "Vous souhaitez des informations concernant les partitions de quel disque ? (0 pour sortir) " disk
-    #         Vérifier si le disque existe
+    # 2)Détails de partitionnement
+    # Demander Disque concerné
+    echo -e "Vous souhaitez des informations concernant les partitions de quel disque ? (0 pour sortir)"
+    read -p "" disk
 
+    # Retour menu précédent si l'utilisateur le souhaite
     if [ $disk = "0" ]
     then
         return
     fi
 
+    # Vérifier si le disque existe
     if lsblk | grep $disk >> /dev/null
-    #             Si oui
-    #             Alors 
+    # +) Déterminer le nombre de partitions & Leur Nom, FS et Taille
     then
-    #                   Commande pour avoir les infos sur les partitions
-    #sudo blkid -o list | grep $disk
-    #sudo parted -l
-
-    #                   Retourner la liste des infos sur le disque sélectionné
-    #                   nombre de partitions (
             nbpart=$(df -Th | grep "$disk" | wc -l)
+            echo -e "\n"
             echo -e "Il y a \e[0;32m$nbpart partitions\e[0;m sur le disque $disk."
-    #                   nom des partition
-    #                   File System            
-    #                   taille de la partition (lsblk | grep part) ou (df -h | grep $disk)
+    
             df -Th | grep $disk | sort | awk '{print $1 " " $3 " " $2}' > /tmp/part.txt
 
+            echo -e "\n"
             while read a b c
             do 
                 echo -e "La partition \e[0;32m$a\e[0;m, d'une \e[0;32mtaille de $b\e[0;m et \e[0;32mau format $c\e[0;m"
             done < /tmp/part.txt
-    #                   Retour au menu des info disques et lecteurs            
-    #             Sinon
+            echo -e "\n"
+    
+    # -) Message erreur & Liste des disques observables
     else
-    #                   message d'erreur le disque sélectionné est inconnue
+        echo -e "\n"
         echo -e "\e[0;31mErreur - Le disque sélectionné est inconnu\e[0;m"
-    #                   afficher liste des disques
         err=$(lsblk | grep disk | awk '{print $1}')
 
 ##### A débugger : fonctionne s'il n'y a qu'un disque, pas s'il y en a plusieurs
 
-        echo -e "\e[0;33mLa liste des disques disponibles est\e[1;35m $err\e[0;m"
-    #             fin
+        echo -e "\e[0;33mLa liste des disques disponibles est\e[1;36m $err\e[0;m"
+        echo -e "\n"
     fi
 
-    # demander si l'utilisateur souhaite sélectionner un autre disque
+    # Possible relance de la fonction
     read -p "Voulez-vous sélectionner un autre disque ? [O/n] " again
-    #                   Si oui      
     if [ $again = "O" ]
-    #                   Alors 
     then
-    #   relancer fonction partition
         disk2
-    #                   Sinon fin
     fi
 }
 
 #Fonction spacedisk
 function spacedisk()
 {
-#   récupérer espace libre sur le disque
+    # Récupérer espace libre sur le disque
     df | grep $disk | awk '{print $4}' | sed ':a;N;$!ba;s/\n/ /g' > /tmp/space.txt
 
     while read a b
@@ -77,65 +69,50 @@ function spacedisk()
 # Fonction disk3
 function disk3()
 {
-    #       3)Demander si l'information concerne un disque entier ou une partition
+    # 3)Demander si l'information concerne un disque entier ou une partition
         echo "Vous souhaitez connaître l'espace disponible..."
         echo -e "1. ...d'un \e[0;36mdisque\e[0;m ?"
         echo -e "2. ...d'une \e[0;36mpartition\e[0;m ?"
         echo "3. Revenir au menu précédent"
         echo "0. Retour au menu principal"
         read -p "" choix
-    #             afficher menu 1 - disque
-    #                           2 - partition    
-    #                           3 - retour menu précédent
-    #                           4 - retour menu principal
 
         case $choix in
+    # 1. Disque entier - Espace restant
         1)
-    #             Si 1
-    #                   Demander le nom du disque
             read -p "Quel disque souhaitez-vous observer ? " disk
-    #                   Vérifier existence du disque demandé
+        # Vérifier existence du disque demandé
             if lsblk | grep "$disk" >> /dev/null
-    #                       si disque existe
+        # +) Appel fonction d'information sur l'espace disque
             then
-    #                       alors
                 spacedisk $disk
-    #                           retourner nom du disque et taille d'espace libre
-    #                       Sinon
+        # -) Message erreur & Liste des disques disponibles
             else
-    #                           message d'erreur le disque sélectionné n'existe pas
                 echo -e "\e[0;31mErreur - Le disque sélectionné est inconnu\e[0;m"
-    #                           afficher liste des disques
                 disks=$(lsblk | grep disk | awk -v RS= '{print $1}')
                 echo -e "\e[0;33mLa liste des disques disponibles est\e[1;35m $disks\e[0;m"
-    #                           retour début de la fonction 
             fi
         ;;
 
+    # 2. Partition - Espace restant
         2)
-    #            Si 2
-    #                   Demander le nom de la partition
+        # Demander le nom de la partition
             read -p "Quelle partition souhaitez-vous observer ? " part
-    #                   Vérifier existence de la partition
+        # Vérifier existence de la partition
             if lsblk | grep "$part" >> /dev/null
-    #                       si existe
-    #                       alors
+
+        # +) Récupérer espace libre sur la partition
             then
-    #                           récupérer espace libre sur la partition
                 echo -e "\n\n"
                 df -h | grep $part | sort | awk '{print "Il reste " $4 " disponibles sur " $1}'
                 echo -e "\n\n"
-    #                           retourner nom de la partition et taille d'espace libre
-    #                       Sinon
+
+        # -) Message erreur & Affichage liste des partitions pour sélection & Retour Sélection Disque/Partition
             else
-    #           message d'erreur la partition sélectionné n'existe pas
                 echo -e "\e[0;31mErreur - La partition sélectionnée n'existe pas\e[0;m"
                 list=$(lsblk | grep part | awk '{print $1}')
                 echo -e "\e[0;33mLes partitions disponibles sont :\e[0;m \e[0;35m\n$list\e[0;m"
-    #                           afficher liste des partitions
-    #                           retour début de la fonction break 
                 disk3
-    #                       fin
             fi
         ;;
 
@@ -153,23 +130,49 @@ function disk3()
 # Fonction disk4
 function disk4()
 {
-#       4)Quel est le nom du répertoire dont vous souhaitez connaître la taille
-    read -p "Quel est le nom du répertoire dont vous souhaitez connaître la taille ? " directory
-#           rechercher fichier dans les espace de stockages
-    if du | grep $directory
-#               Si résultat positif
-#               Alors 
+    # 4) Recherche d'espace occupé par un répertoire
+    # Demande chemin réseau du répertoire
+    echo "Quel est le nom du répertoire dont vous souhaitez connaître la taille ?"
+    read -p "" path
+
+    # Vérification existence du répertoire
+    if du $path > /dev/null
+
+    # +) Affichage de l'espace occupé par le répertoire
     then
-        echo "OK"
-#                   retourner nom du dossier et taille
-#               Sinon 
+        du -sh $path | awk '{print $2 " " $1}' > /tmp/space.txt
+        while read a b
+        do                   
+            echo -e "\n"
+            echo -e "\e[0;32m$a\e[0;m occupe \e[0;32m$b\e[0;m d'espace."
+            echo -e "\n"
+        done < /tmp/space.txt
+
+    # -) Message erreur
     else
-        echo "NOK"
+        echo -e "\n"
+        echo -e "\e[0;31mErreur - Le chemin spécifié est introuvable.\e[0;m"
+        echo -e "\e[0;33mMerci d'entrer le chemin réseau complet\e[0;m"
+        echo -e "\n"
         return
     fi
-#                   retourner message: dossier inconnu
-#                   retour menu info disque et lecteur
-#               fin
+}
+
+# Fonction disk5
+function disk5()
+{
+    #       5)Rechercher liste des lecteur monté sur l'ordinateur et retourner liste
+    #         Retourner liste
+    #         Retour menu info disque et lecteur
+    df | grep -v tmpfs | grep -v blocs | sort | awk '{print $1" "$6}' > /tmp/awk.txt
+
+    echo -e "\n"
+    while read a b
+    do
+        echo -e "Le volume \e[0;32m$a\e[0;m est monté sur \e[0;32m$b\e[0;m"
+    done < /tmp/awk.txt
+    echo -e "\n"
+
 }
 
 #Information sur les disques et lecteurs
@@ -211,15 +214,14 @@ function infodisk()
     ;;
 
     4)
-        echo -e "\n\n"
+        echo -e "\n"
         disk4
     ;;      
 
     5)
-    #       5)Rechercher liste des lecteur monté sur l'ordinateur et retourner liste
-    #         Retourner liste
-    #         Retour menu info disque et lecteur
-    ;;  
+        echo -e "\n"
+        disk5
+   ;;  
 
     6)
     #       6)Retour au menu précédent : information sur un ordinateur client
