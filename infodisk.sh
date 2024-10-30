@@ -42,7 +42,7 @@ function disk2()
 
 ##### A débugger : fonctionne s'il n'y a qu'un disque, pas s'il y en a plusieurs
 
-        echo -e "\e[0;31mLes disques disponibles sont\e[0;m $err"
+        echo -e "\e[0;33mLa liste des disques disponibles est\e[1;35m $err\e[0;m"
     #             fin
     fi
 
@@ -58,6 +58,22 @@ function disk2()
     fi
 }
 
+#Fonction spacedisk
+function spacedisk()
+{
+#   récupérer espace libre sur le disque
+    df | grep $disk | awk '{print $4}' | sed ':a;N;$!ba;s/\n/ /g' > /tmp/space.txt
+
+    while read a b
+    do                   
+        result=$(($a + $b))
+        result=$(numfmt --to=iec $result)
+        echo -e "\n"
+        echo -e "Il reste \e[0;32m$result\e[0;m disponibles sur \e[0;32m$disk\e[0;m"
+        echo -e "\n"
+    done < /tmp/space.txt
+   
+}
 # Fonction disk3
 function disk3()
 {
@@ -72,23 +88,23 @@ function disk3()
     #                           2 - partition    
     #                           3 - retour menu précédent
     #                           4 - retour menu principal
+
         case $choix in
         1)
     #             Si 1
     #                   Demander le nom du disque
             read -p "Quel disque souhaitez-vous observer ? " disk
     #                   Vérifier existence du disque demandé
-            if lsblk | grep "$disk"
+            if lsblk | grep "$disk" >> /dev/null
     #                       si disque existe
             then
     #                       alors
-    #                           récupérer espace libre sur le disque
-                echo "Espace libre : "
+                spacedisk $disk
     #                           retourner nom du disque et taille d'espace libre
     #                       Sinon
             else
     #                           message d'erreur le disque sélectionné n'existe pas
-                echo -e "\e[0;31mErreur - Le disque sélectionné n'existe pas\e[0;m"
+                echo -e "\e[0;31mErreur - Le disque sélectionné est inconnu\e[0;m"
     #                           afficher liste des disques
                 disks=$(lsblk | grep disk | awk -v RS= '{print $1}')
                 echo -e "\e[0;33mLa liste des disques disponibles est\e[1;35m $disks\e[0;m"
@@ -106,15 +122,17 @@ function disk3()
     #                       alors
             then
     #                           récupérer espace libre sur la partition
-    #lsblk | grep "$part" | awk -v RS= '{print $2}' 
-    echo "$part" && df -h | grep "$part" | awk -v RS= '{print $4}'
+                echo -e "\n\n"
+                df -h | grep $part | sort | awk '{print "Il reste " $4 " disponibles sur " $1}'
+                echo -e "\n\n"
     #                           retourner nom de la partition et taille d'espace libre
     #                       Sinon
             else
     #           message d'erreur la partition sélectionné n'existe pas
-                echo "Erreur - La partition sélectionnée n'existe pas"
+                echo -e "\e[0;31mErreur - La partition sélectionnée n'existe pas\e[0;m"
+                list=$(lsblk | grep part | awk '{print $1}')
+                echo -e "\e[0;33mLes partitions disponibles sont :\e[0;m \e[0;35m\n$list\e[0;m"
     #                           afficher liste des partitions
-                lsblk | grep part
     #                           retour début de la fonction break 
                 disk3
     #                       fin
@@ -122,7 +140,7 @@ function disk3()
         ;;
 
         3)
-
+            return
         ;;
         0)
             exit 0
@@ -130,6 +148,28 @@ function disk3()
         *)
         ;;
         esac
+}
+
+# Fonction disk4
+function disk4()
+{
+#       4)Quel est le nom du répertoire dont vous souhaitez connaître la taille
+    read -p "Quel est le nom du répertoire dont vous souhaitez connaître la taille ? " directory
+#           rechercher fichier dans les espace de stockages
+    if du | grep $directory
+#               Si résultat positif
+#               Alors 
+    then
+        echo "OK"
+#                   retourner nom du dossier et taille
+#               Sinon 
+    else
+        echo "NOK"
+        return
+    fi
+#                   retourner message: dossier inconnu
+#                   retour menu info disque et lecteur
+#               fin
 }
 
 #Information sur les disques et lecteurs
@@ -155,27 +195,24 @@ function infodisk()
     #       1)Rechercher le nombre de disques présent sur la machine 
     #         Retourner la liste des disques ou le nombre
         disk=$(lsblk | grep disk | wc -l)
+        echo -e "\n"
         echo -e "Il y a \e[0;32m$disk disque(s)\e[0;m sur la machine."
+        echo -e "\n"
     ;;
 
-    2)      
+    2)  
+        echo -e "\n"    
         disk2
     ;;
 
     3)
+        echo -e "\n"
         disk3
     ;;
 
     4)
-    #       4)Quel est le nom du fichier dont vous souhaitez connaître l'emplacement
-    #           rechercher fichier dans les espace de stockages
-    #               Si résultat positif
-    #               Alors 
-    #                   retourner nom du dossier et emplacement
-    #               Sinon 
-    #                   retourner message: dossier inconnue
-    #                   retour menu info disque et lecteur
-    #               fin
+        echo -e "\n\n"
+        disk4
     ;;      
 
     5)
@@ -185,7 +222,8 @@ function infodisk()
     ;;  
 
     6)
-    #       6)Retour au menu précédant : information sur un ordinateur client
+    #       6)Retour au menu précédent : information sur un ordinateur client
+        echo -e "\e[0;35mRetour au menu précédent\e[0;m"
     ;;
 
     0)
