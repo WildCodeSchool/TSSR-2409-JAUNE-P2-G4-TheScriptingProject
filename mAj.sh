@@ -6,9 +6,9 @@ function retour () {
     read "Faite votre selection (1/2) :" selectRet
         if [ $selectRet -eq 1 ]
         then
-            #########fonction menu selection action sur ordi#########
+            return 
         else
-            #########fonction menu principal########
+            menu1
         fi     
 }
 
