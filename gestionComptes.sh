@@ -1,62 +1,37 @@
 #!/bin/bash
 
-# Fonction pour vérifier si un groupe existe
-groupe_existe() {
-    local groupe="$1"
-    getent group "$groupe" > /dev/null 2>&1
-}
-
-# Fonction pour vérifier l'appartenance d'un utilisateur à un groupe
-verifier_membre() {
-    local utilisateur="$1"
-    local groupe="$2"
-    id -nG "$utilisateur" | grep -qw "$groupe"
-}
-
-# Fonction pour ajouter un utilisateur au groupe sudo
+# Fonction pour ajouter un utilisateur au groupe d'administration (sudo)
 creer_utilisateur_groupe_admin() {
-    local utilisateur="$1"
-    local groupe="sudo"
+    local nom_utilisateur=$1
+    local groupe_admin="sudo"  # Nom du groupe d'administration
 
-    if verifier_membre "$utilisateur" "$groupe"; then
-        echo "L'utilisateur est déjà membre du groupe sudo (administrateur)."
+    # Vérification de la présence de l'utilisateur dans le groupe d'administration
+    if id -nG "$nom_utilisateur" | grep -qw "$groupe_admin"; then
+        echo "L'utilisateur est déjà membre du groupe d'administration."
     else
-        read -p "Voulez-vous ajouter l'utilisateur au groupe sudo ? (Oui/Non): " confirmation
-        if [[ "$confirmation" == "Oui" ]]; then
-            sudo usermod -aG "$groupe" "$utilisateur"
-            echo "Utilisateur ajouté au groupe sudo avec succès."
+        read -p "Voulez-vous ajouter l'utilisateur au groupe d'administration ? (oui/non) " reponse
+        if [ "$reponse" == "oui" ]; then
+            sudo usermod -aG "$groupe_admin" "$nom_utilisateur"
+            echo "Utilisateur ajouté au groupe d'administration avec succès."
         else
             echo "Ajout annulé."
         fi
     fi
 }
 
-# Fonction pour ajouter un utilisateur à un groupe local avec confirmation
+# Fonction pour ajouter un utilisateur à un groupe local
 creer_utilisateur_groupe_local() {
-    local utilisateur="$1"
-    read -p "Entrez le nom du groupe local : " groupe
+    local nom_utilisateur=$1
+    read -p "Entrez le nom du groupe local : " groupe_local
 
-    # Vérifier si le groupe existe, sinon le créer
-    if ! groupe_existe "$groupe"; then
-        echo "Le groupe $groupe n'existe pas."
-        read -p "Voulez-vous créer le groupe $groupe ? (Oui/Non): " confirmation_creation
-        if [[ "$confirmation_creation" == "Oui" ]]; then
-            sudo groupadd "$groupe"
-            echo "Groupe $groupe créé avec succès."
-        else
-            echo "Création du groupe annulée."
-            return
-        fi
-    fi
-
-    # Ajouter l'utilisateur au groupe après confirmation
-    if verifier_membre "$utilisateur" "$groupe"; then
-        echo "L'utilisateur est déjà membre du groupe $groupe."
+    # Vérification de la présence de l'utilisateur dans le groupe local
+    if id -nG "$nom_utilisateur" | grep -qw "$groupe_local"; then
+        echo "L'utilisateur est déjà membre du groupe local."
     else
-        read -p "Voulez-vous ajouter l'utilisateur au groupe $groupe ? (Oui/Non): " confirmation
-        if [[ "$confirmation" == "Oui" ]]; then
-            sudo usermod -aG "$groupe" "$utilisateur"
-            echo "Utilisateur ajouté au groupe $groupe avec succès."
+        read -p "Voulez-vous ajouter l'utilisateur au groupe local ? (oui/non) " reponse
+        if [ "$reponse" == "oui" ]; then
+            sudo usermod -aG "$groupe_local" "$nom_utilisateur"
+            echo "Utilisateur ajouté au groupe local avec succès."
         else
             echo "Ajout annulé."
         fi
@@ -65,23 +40,24 @@ creer_utilisateur_groupe_local() {
 
 # Fonction pour retirer un utilisateur d'un groupe local
 retirer_utilisateur_du_groupe_local() {
-    local utilisateur="$1"
-    read -p "Entrez le nom du groupe local : " groupe
+    local nom_utilisateur=$1
+    read -p "Entrez le nom du groupe local : " groupe_local
 
-    if verifier_membre "$utilisateur" "$groupe"; then
-        read -p "Voulez-vous retirer l'utilisateur du groupe $groupe ? (Oui/Non): " confirmation
-        if [[ "$confirmation" == "Oui" ]]; then
-            sudo gpasswd -d "$utilisateur" "$groupe"
-            echo "Utilisateur retiré du groupe $groupe avec succès."
+    # Vérification de la présence de l'utilisateur dans le groupe local
+    if id -nG "$nom_utilisateur" | grep -qw "$groupe_local"; then
+        read -p "Voulez-vous retirer l'utilisateur du groupe local ? (oui/non) " reponse
+        if [ "$reponse" == "oui" ]; then
+            sudo gpasswd -d "$nom_utilisateur" "$groupe_local"
+            echo "Utilisateur retiré du groupe local avec succès."
         else
             echo "Retrait annulé."
         fi
     else
-        echo "L'utilisateur n'est pas membre du groupe $groupe."
+        echo "L'utilisateur n'est pas membre du groupe local."
     fi
 }
 
-# Menu principal pour choisir l'action
+# Menu principal
 while true; do
     echo "Choisissez une action :"
     echo "1. Ajouter un utilisateur au groupe sudo (administration)"
