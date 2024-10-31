@@ -1,14 +1,16 @@
 #!/bin/bash
 
+# Fonction pour vérifier si un groupe existe
+groupe_existe() {
+    local groupe="$1"
+    getent group "$groupe" > /dev/null 2>&1
+}
+
 # Fonction pour vérifier l'appartenance d'un utilisateur à un groupe
 verifier_membre() {
     local utilisateur="$1"
     local groupe="$2"
-    if id -nG "$utilisateur" | grep -qw "$groupe"; then
-        return 0  # Utilisateur est membre du groupe
-    else
-        return 1  # Utilisateur n'est pas membre du groupe
-    fi
+    id -nG "$utilisateur" | grep -qw "$groupe"
 }
 
 # Fonction pour ajouter un utilisateur au groupe sudo
@@ -17,25 +19,15 @@ creer_utilisateur_groupe_admin() {
     local groupe="sudo"
 
     if verifier_membre "$utilisateur" "$groupe"; then
-        echo "L'utilisateur est déjà membre du groupe sudo (administrateurs)."
+        echo "L'utilisateur est déjà membre du groupe sudo (administrateur)."
     else
-        read -p "Voulez-vous ajouter l'utilisateur au groupe sudo ? (oui/non): " confirmation
-        if [[ "$confirmation" == "oui" ]]; then
+        read -p "Voulez-vous ajouter l'utilisateur au groupe sudo ? (Oui/Non): " confirmation
+        if [[ "$confirmation" == "Oui" ]]; then
             sudo usermod -aG "$groupe" "$utilisateur"
             echo "Utilisateur ajouté au groupe sudo avec succès."
         else
             echo "Ajout annulé."
         fi
-    fi
-}
-
-# Fonction pour vérifier si un groupe existe
-groupe_existe() {
-    local groupe="$1"
-    if getent group "$groupe" > /dev/null 2>&1; then
-        return 0  # Groupe existe
-    else
-        return 1  # Groupe n'existe pas
     fi
 }
 
@@ -47,8 +39,8 @@ creer_utilisateur_groupe_local() {
     # Vérifier si le groupe existe, sinon le créer
     if ! groupe_existe "$groupe"; then
         echo "Le groupe $groupe n'existe pas."
-        read -p "Voulez-vous créer le groupe $groupe ? (oui/non): " confirmation_creation
-        if [[ "$confirmation_creation" == "oui" ]]; then
+        read -p "Voulez-vous créer le groupe $groupe ? (Oui/Non): " confirmation_creation
+        if [[ "$confirmation_creation" == "Oui" ]]; then
             sudo groupadd "$groupe"
             echo "Groupe $groupe créé avec succès."
         else
@@ -61,8 +53,8 @@ creer_utilisateur_groupe_local() {
     if verifier_membre "$utilisateur" "$groupe"; then
         echo "L'utilisateur est déjà membre du groupe $groupe."
     else
-        read -p "Voulez-vous ajouter l'utilisateur au groupe $groupe ? (oui/non): " confirmation
-        if [[ "$confirmation" == "oui" ]]; then
+        read -p "Voulez-vous ajouter l'utilisateur au groupe $groupe ? (Oui/Non): " confirmation
+        if [[ "$confirmation" == "Oui" ]]; then
             sudo usermod -aG "$groupe" "$utilisateur"
             echo "Utilisateur ajouté au groupe $groupe avec succès."
         else
@@ -77,8 +69,8 @@ retirer_utilisateur_du_groupe_local() {
     read -p "Entrez le nom du groupe local : " groupe
 
     if verifier_membre "$utilisateur" "$groupe"; then
-        read -p "Voulez-vous retirer l'utilisateur du groupe $groupe ? (oui/non): " confirmation
-        if [[ "$confirmation" == "oui" ]]; then
+        read -p "Voulez-vous retirer l'utilisateur du groupe $groupe ? (Oui/Non): " confirmation
+        if [[ "$confirmation" == "Oui" ]]; then
             sudo gpasswd -d "$utilisateur" "$groupe"
             echo "Utilisateur retiré du groupe $groupe avec succès."
         else
