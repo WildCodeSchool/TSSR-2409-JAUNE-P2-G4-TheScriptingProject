@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Vérifie si le script est exécuté avec des privilèges root, sinon relance avec sudo
+if [ "$EUID" -ne 0 ]; then
+    echo "Ce script doit être exécuté avec des privilèges root."
+    exec sudo "$0" "$@"
+fi
+
 # Fonction pour ajouter un utilisateur au groupe d'administration (sudo)
 creer_utilisateur_groupe_admin() {
     local nom_utilisateur=$1
@@ -11,8 +17,12 @@ creer_utilisateur_groupe_admin() {
     else
         read -p "Voulez-vous ajouter l'utilisateur au groupe d'administration ? (oui/non) " reponse
         if [ "$reponse" == "oui" ]; then
-            sudo usermod -aG "$groupe_admin" "$nom_utilisateur"
-            echo "Utilisateur ajouté au groupe d'administration avec succès."
+            usermod -aG "$groupe_admin" "$nom_utilisateur"
+            if [ $? -eq 0 ]; then
+                echo "Utilisateur ajouté au groupe d'administration avec succès."
+            else
+                echo "Erreur lors de l'ajout de l'utilisateur au groupe d'administration."
+            fi
         else
             echo "Ajout annulé."
         fi
@@ -30,8 +40,12 @@ creer_utilisateur_groupe_local() {
     else
         read -p "Voulez-vous ajouter l'utilisateur au groupe local ? (oui/non) " reponse
         if [ "$reponse" == "oui" ]; then
-            sudo usermod -aG "$groupe_local" "$nom_utilisateur"
-            echo "Utilisateur ajouté au groupe local avec succès."
+            usermod -aG "$groupe_local" "$nom_utilisateur"
+            if [ $? -eq 0 ]; then
+                echo "Utilisateur ajouté au groupe local avec succès."
+            else
+                echo "Erreur lors de l'ajout de l'utilisateur au groupe local."
+            fi
         else
             echo "Ajout annulé."
         fi
@@ -47,8 +61,12 @@ retirer_utilisateur_du_groupe_local() {
     if id -nG "$nom_utilisateur" | grep -qw "$groupe_local"; then
         read -p "Voulez-vous retirer l'utilisateur du groupe local ? (oui/non) " reponse
         if [ "$reponse" == "oui" ]; then
-            sudo gpasswd -d "$nom_utilisateur" "$groupe_local"
-            echo "Utilisateur retiré du groupe local avec succès."
+            gpasswd -d "$nom_utilisateur" "$groupe_local"
+            if [ $? -eq 0 ]; then
+                echo "Utilisateur retiré du groupe local avec succès."
+            else
+                echo "Erreur lors du retrait de l'utilisateur du groupe local."
+            fi
         else
             echo "Retrait annulé."
         fi
