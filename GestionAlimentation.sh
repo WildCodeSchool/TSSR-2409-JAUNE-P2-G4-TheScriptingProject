@@ -22,7 +22,7 @@ fonction_arret() {
         3)
             # Annuler l'arrêt
             echo "Arrêt annulé."
-            exit 1
+            return
             ;;
         *)
             echo "Choix invalide."
@@ -52,7 +52,7 @@ fonction_redemarrage() {
         3)
             # Annuler le redémarrage
             echo "Redémarrage annulé."
-            exit 1
+            return
             ;;
         *)
             echo "Choix invalide."
@@ -63,6 +63,7 @@ fonction_redemarrage() {
 # Fonction pour verrouiller la session
 fonction_verrouillage() {
     echo "Verrouillage de la session..."
+    # Cette commande verrouille l'écran pour Ubuntu/Gnome. Modifiez-la selon votre gestionnaire de fenêtres si nécessaire.
     gnome-screensaver-command -l || echo "Verrouillage non disponible."
 }
 
@@ -90,6 +91,3 @@ gestion_alimentation() {
             ;;
     esac
 }
-
-# Exit avec succès
-exit 0
