@@ -1,15 +1,23 @@
 #!/bin/bash
 
-# Vérifie si le script est exécuté avec des privilèges root, sinon relance avec sudo
-if [ "$EUID" -ne 0 ]; then
-    echo "Ce script doit être exécuté avec des privilèges root."
-    exec sudo "$0" "$@"
-fi
-
-# Fonction pour ajouter un utilisateur au groupe d'administration (sudo)
+# Fonction pour créer un utilisateur s'il n'existe pas et l'ajouter au groupe d'administration (sudo)
 creer_utilisateur_groupe_admin() {
     local nom_utilisateur=$1
     local groupe_admin="sudo"  # Nom du groupe d'administration
+
+    # Vérification si l'utilisateur existe
+    if id "$nom_utilisateur" &>/dev/null; then
+        echo "L'utilisateur $nom_utilisateur existe déjà."
+    else
+        read -p "L'utilisateur $nom_utilisateur n'existe pas. Voulez-vous le créer ? (oui/non) " reponse
+        if [ "$reponse" == "oui" ]; then
+            adduser "$nom_utilisateur"
+            echo "Utilisateur $nom_utilisateur créé avec succès."
+        else
+            echo "Création de l'utilisateur annulée."
+            return
+        fi
+    fi
 
     # Vérification de la présence de l'utilisateur dans le groupe d'administration
     if id -nG "$nom_utilisateur" | grep -qw "$groupe_admin"; then
@@ -34,6 +42,12 @@ creer_utilisateur_groupe_local() {
     local nom_utilisateur=$1
     read -p "Entrez le nom du groupe local : " groupe_local
 
+    # Vérification si l'utilisateur existe
+    if ! id "$nom_utilisateur" &>/dev/null; then
+        echo "Erreur : L'utilisateur $nom_utilisateur n'existe pas."
+        return
+    fi
+
     # Vérification de la présence de l'utilisateur dans le groupe local
     if id -nG "$nom_utilisateur" | grep -qw "$groupe_local"; then
         echo "L'utilisateur est déjà membre du groupe local."
@@ -56,6 +70,12 @@ creer_utilisateur_groupe_local() {
 retirer_utilisateur_du_groupe_local() {
     local nom_utilisateur=$1
     read -p "Entrez le nom du groupe local : " groupe_local
+
+    # Vérification si l'utilisateur existe
+    if ! id "$nom_utilisateur" &>/dev/null; then
+        echo "Erreur : L'utilisateur $nom_utilisateur n'existe pas."
+        return
+    fi
 
     # Vérification de la présence de l'utilisateur dans le groupe local
     if id -nG "$nom_utilisateur" | grep -qw "$groupe_local"; then
