@@ -8,7 +8,7 @@ creer_utilisateur_groupe_admin() {
     # Vérification si l'utilisateur existe, sinon le créer
     if ! id "$nom_utilisateur" &>/dev/null; then
         echo "L'utilisateur $nom_utilisateur n'existe pas. Création en cours..."
-        sudo adduser "$nom_utilisateur"
+        adduser "$nom_utilisateur"
         echo "Utilisateur $nom_utilisateur créé avec succès."
     else
         echo "L'utilisateur $nom_utilisateur existe déjà."
@@ -19,7 +19,7 @@ creer_utilisateur_groupe_admin() {
         echo "L'utilisateur est déjà membre du groupe d'administration."
     else
         echo "Ajout de $nom_utilisateur au groupe d'administration ($groupe_admin)..."
-        sudo usermod -aG "$groupe_admin" "$nom_utilisateur"
+        usermod -aG "$groupe_admin" "$nom_utilisateur"
         if [ $? -eq 0 ]; then
             echo "Utilisateur ajouté au groupe d'administration avec succès."
         else
@@ -39,20 +39,22 @@ creer_utilisateur_groupe_local() {
         return
     fi
 
-    # Vérification de la présence de l'utilisateur dans le groupe local
+    # Création du groupe local s'il n'existe pas
+    if ! getent group "$groupe_local" &>/dev/null; then
+        echo "Le groupe $groupe_local n'existe pas. Création en cours..."
+        groupadd "$groupe_local"
+        echo "Groupe $groupe_local créé avec succès."
+    fi
+
+    # Ajout de l'utilisateur au groupe local
     if id -nG "$nom_utilisateur" | grep -qw "$groupe_local"; then
         echo "L'utilisateur est déjà membre du groupe local."
     else
-        read -p "Voulez-vous ajouter l'utilisateur au groupe local ? (oui/non) " reponse
-        if [ "$reponse" == "oui" ]; then
-            sudo usermod -aG "$groupe_local" "$nom_utilisateur"
-            if [ $? -eq 0 ]; then
-                echo "Utilisateur ajouté au groupe local avec succès."
-            else
-                echo "Erreur lors de l'ajout de l'utilisateur au groupe local."
-            fi
+        usermod -aG "$groupe_local" "$nom_utilisateur"
+        if [ $? -eq 0 ]; then
+            echo "Utilisateur ajouté au groupe local avec succès."
         else
-            echo "Ajout annulé."
+            echo "Erreur lors de l'ajout de l'utilisateur au groupe local."
         fi
     fi
 }
@@ -72,7 +74,7 @@ retirer_utilisateur_du_groupe_local() {
     if id -nG "$nom_utilisateur" | grep -qw "$groupe_local"; then
         read -p "Voulez-vous retirer l'utilisateur du groupe local ? (oui/non) " reponse
         if [ "$reponse" == "oui" ]; then
-            sudo gpasswd -d "$nom_utilisateur" "$groupe_local"
+            gpasswd -d "$nom_utilisateur" "$groupe_local"
             if [ $? -eq 0 ]; then
                 echo "Utilisateur retiré du groupe local avec succès."
             else
