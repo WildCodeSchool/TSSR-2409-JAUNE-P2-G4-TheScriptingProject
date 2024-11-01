@@ -11,7 +11,7 @@
 function journalisation()
 {
     # Définition des variables Date/Heure/Utilisateur
-    $date=$(Get-Date -Format "yyyymmdd-hhmmss")
+    $date=$(Get-Date -Format "yyyymmdd-HHmmss")
     $user=$($env:USERNAME)
 
     # Récupération de l'action à enregistrer placée en argument
