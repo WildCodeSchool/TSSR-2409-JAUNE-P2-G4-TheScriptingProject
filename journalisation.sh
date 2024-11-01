@@ -21,11 +21,20 @@
 #   Actions modulaires :
 #       - Définition de l'action
 
+###########################################################
+#                                                         #
+#                       PREREQUIS                         #
+#                                                         #
+# Avoir créé le fichier /var/log/log_evt.log au préalable #
+#                                                         #
+#    Avoir donné les droits d'écriture sur le fichier     #
+#                                                         #
+#           sudo chmod 766 /var/log/log_evt.log           #
+#                                                         #
+###########################################################
+
 function journalisation()
 {
-    # Assurer que l'écriture est autorisée sur le fichier log
-    sudo chmod 766 /var/log/log_evt.log
-
     # Définition des variables Date/Heure/Utilisateur
     date=$(date +%F | tr -d '-')
     heure=$(date +%T | tr -d ':')
