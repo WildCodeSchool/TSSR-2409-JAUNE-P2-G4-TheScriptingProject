@@ -96,11 +96,17 @@ retirer_utilisateur_du_groupe_local() {
         return
     fi
 
+    # Vérification si le groupe existe
+    if ! getent group "$groupe_local" &>/dev/null; then
+        echo "Erreur : Le groupe $groupe_local n'existe pas."
+        return
+    fi
+
     # Vérification de la présence de l'utilisateur dans le groupe local
     if id -nG "$nom_utilisateur" | grep -qw "$groupe_local"; then
         read -p "Voulez-vous retirer l'utilisateur du groupe local ? (oui/non) " reponse
         if [ "$reponse" == "oui" ]; then
-            gpasswd -d "$nom_utilisateur" "$groupe_local"
+            deluser "$nom_utilisateur" "$groupe_local"
             if [ $? -eq 0 ]; then
                 echo "Utilisateur retiré du groupe local avec succès."
             else
