@@ -58,7 +58,7 @@ function Fonction-Verrouillage {
     rundll32.exe user32.dll,LockWorkStation
 }
 
-# Menu principal en boucle
+# Menu principal 
 while ($true) {
     Write-Output "Que voulez-vous faire ?"
     Write-Output "1 - Arrêter l'ordinateur"

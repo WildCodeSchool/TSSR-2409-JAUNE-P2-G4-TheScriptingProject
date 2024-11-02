@@ -60,7 +60,7 @@ fonction_verrouillage() {
     gnome-screensaver-command -l || echo "Verrouillage non disponible."
 }
 
-# Menu principal en boucle
+# Menu principal 
 while true; do
     echo "Que voulez-vous faire ?"
     echo "1 - Arrêter l'ordinateur"
