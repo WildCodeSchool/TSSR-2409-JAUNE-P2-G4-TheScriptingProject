@@ -1,5 +1,5 @@
 # Fonction pour créer un utilisateur s'il n'existe pas
-function Creer-Utilisateur {
+function Création_Utilisateur {
     param (
         [string]$NomUtilisateur
     )
@@ -23,7 +23,7 @@ function Creer-Utilisateur {
 }
 
 # Fonction pour vérifier et créer un groupe s'il n'existe pas
-function Creer-Groupe-Si-Non-Existant {
+function Création_Groupe_inexistant{
     param (
         [string]$NomGroupe
     )
@@ -47,7 +47,7 @@ function Creer-Groupe-Si-Non-Existant {
 }
 
 # Fonction pour ajouter un utilisateur au groupe Administrateurs avec confirmation
-function Creer-Utilisateur-Groupe-Admin {
+function Creation_Utilisateur_Admin {
     param (
         [string]$NomUtilisateur,
         [string]$NomGroupe = "Administrateurs" 
@@ -79,7 +79,7 @@ function Creer-Utilisateur-Groupe-Admin {
 }
 
 # Fonction pour ajouter un utilisateur à un groupe local avec confirmation
-function Creer-Utilisateur-Groupe-Local {
+function Creation_Utilisateur_Local {
     param (
         [string]$NomUtilisateur,
         [string]$NomGroupe
@@ -111,7 +111,7 @@ function Creer-Utilisateur-Groupe-Local {
 }
 
 # Fonction pour retirer un utilisateur d'un groupe local avec confirmation
-function Retirer-Utilisateur-Du-Groupe-Local {
+function suppression_Utilisateur{
     param (
         [string]$NomUtilisateur,
         [string]$NomGroupe
