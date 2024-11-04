@@ -46,7 +46,7 @@ while true; do
                 if [ $? -eq 1 ]; then
                     echo "Cet utilisateur n'a peut-être pas de date de changement enregistrée."
                 else
-                    echo "Erreur : Permissions insuffisantes pour récupérer cette information. Essayez d'exécuter le script avec 'sudo'."
+                    echo "Erreur : Permissions insuffisantes pour récupérer cette information."
                 fi
             fi
             ;;
