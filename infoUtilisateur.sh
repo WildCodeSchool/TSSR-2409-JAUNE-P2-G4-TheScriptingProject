@@ -41,14 +41,9 @@ while true; do
             ;;
         2)
             # Date de dernière modification du mot de passe de l'utilisateur
+
             echo "Date de dernière modification du mot de passe de l'utilisateur $UTILISATEUR :"
-            if ! sudo chage -l "$UTILISATEUR" 2>/dev/null | grep "Last password change"; then
-                if [ $? -eq 1 ]; then
-                    echo "Cet utilisateur n'a peut-être pas de date de changement enregistrée."
-                else
-                    echo "Erreur : Permissions insuffisantes pour récupérer cette information."
-                fi
-            fi
+             sudo chage -l  "$UTILISATEUR" | grep "modification" 
             ;;
         3)
             # Liste des sessions ouvertes par l'utilisateur
