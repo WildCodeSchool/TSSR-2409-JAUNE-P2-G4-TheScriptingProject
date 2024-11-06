@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo "=============================="
+echo "Gestion alimentation"
+echo "=============================="
+
 # Fonction pour arrêter l'ordinateur
 fonction_arret() {
     echo "Voulez-vous vraiment arrêter ?"

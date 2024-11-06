@@ -1,4 +1,9 @@
 #!/bin/bash
+
+echo "=============================="
+echo "Gestion des pare-feux"
+echo "=============================="
+
 # Script Bash pour activer ou désactiver le pare-feu 
 
 while true; do
