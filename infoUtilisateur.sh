@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "=============================="
-echo "Information utilisateurs"
+echo "Informations utilisateurs"
 echo "=============================="
 
 # Fonction pour afficher le menu
