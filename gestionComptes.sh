@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo "=============================="
+echo "Gestion des groupes"
+echo "=============================="
+
 # Fonction pour créer un utilisateur s'il n'existe pas
 creer_utilisateur() {
     local nom_utilisateur=$1

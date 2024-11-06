@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo "=============================="
+echo "Information utilisateurs"
+echo "=============================="
+
 # Fonction pour afficher le menu
 afficher_menu() {
     echo "Menu principal - Choisissez une action :"
@@ -43,7 +47,7 @@ while true; do
             # Date de dernière modification du mot de passe de l'utilisateur
 
             echo "Date de dernière modification du mot de passe de l'utilisateur $UTILISATEUR :"
-             sudo chage -l  "$UTILISATEUR" | grep "modification" 
+            sudo chage -l "$UTILISATEUR" | grep "modification"
             ;;
         3)
             # Liste des sessions ouvertes par l'utilisateur
@@ -55,12 +59,11 @@ while true; do
         4)
             # Quitter le script
             echo "Quitter le script."
-            break
+            exit 0
             ;;
         *)
             echo "Choix invalide, veuillez entrer 1, 2, 3 ou 4."
             ;;
     esac
-    echo "" 
+    echo ""
 done
-
