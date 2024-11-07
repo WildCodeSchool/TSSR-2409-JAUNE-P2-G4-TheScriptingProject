@@ -23,15 +23,16 @@ function menu2
     Write-Host "12. Créer un répertoire"
     Write-Host "13. Modifier un répertoire"
     Write-Host "14. Supprimer un répertoire"
-    Write-Host "15. Activer le pare-feu"
-    Write-Host "16. Désactiver le pare-feu"
-    Write-Host "17. Installation de logiciel"
-    Write-Host "18. Désinstallation de logiciel"
-    Write-Host "19. Exécution de script sur la machine distante"
+    Write-Host "15. Prise en main à distance (GUI)"
+    Write-Host "16. Activer le pare-feu"
+    Write-Host "17. Désactiver le pare-feu"
+    Write-Host "18. Installation de logiciel"
+    Write-Host "19. Désinstallation de logiciel"
+    Write-Host "20. Exécution de script sur la machine distante"
     Write-Host "0. Revenir en arrière"
     Write-Host "=========================================================="
     Write-Host "`n"
-    $choix=Read-Host "(Taper 1, 2, ... , 19 ou 0)"
+    $choix=Read-Host "(Taper 1, 2, ... , 20 ou 0)"
     Switch ( $choix )
     {
         1
@@ -104,34 +105,36 @@ function menu2
                 # Lancement Suppression de répertoire
                 SuppRep
             }
-
-        ##### Fonction Prise en main à distance GUI
-
         15
+            {
+                # Lancement Fonction Prise en main à distance GUI
+                
+            }
+        16
             {
                 # Lancement Activation du pare-feu
                 Write-Output "Activation du pare-feu..."
                 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
                 Write-Output "Pare-feu activé pour tous les profils."
             }
-        16
+        17
             {
                 # Lancement Désactivation du pare-feu
                 Write-Output "Désactivation du pare-feu..."
                 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
                 Write-Output "Pare-feu désactivé pour tous les profils."
             }
-        17
+        18
             {
                 # Lancement Installation de logiciel
                 # Fonction install-software
             }
-        18
+        19
             {
                 # Lancement Désinstallation de logiciel
                 # Fonction uninstall-software
             }
-        19
+        20
             {
                 # Lancement Exécution de script sur la machine distante
                 # Fonction scriptexec
