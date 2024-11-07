@@ -5,146 +5,130 @@ echo "Gestion des groupes"
 echo "=============================="
 
 # Fonction pour créer un utilisateur s'il n'existe pas
-creer_utilisateur() {
-    local nom_utilisateur=$1
-
-    # Création de l'utilisateur si nécessaire
-    if ! id "$nom_utilisateur" &>/dev/null; then
+function creation_utilisateur {
+    local nom_utilisateur="$1"
+    
+    # Vérifie si l'utilisateur existe
+    if id "$nom_utilisateur" &>/dev/null; then
+        echo "L'utilisateur $nom_utilisateur existe déjà."
+        return 0
+    else
         echo "L'utilisateur $nom_utilisateur n'existe pas. Création en cours..."
-        adduser --quiet "$nom_utilisateur"
-        if [ $? -eq 0 ]; then
+        sudo useradd "$nom_utilisateur"
+        if [[ $? -eq 0 ]]; then
             echo "Utilisateur $nom_utilisateur créé avec succès."
+            return 0
         else
             echo "Erreur lors de la création de l'utilisateur $nom_utilisateur."
             return 1
         fi
-    else
-        echo "L'utilisateur $nom_utilisateur existe déjà."
     fi
 }
 
-# Fonction pour vérifier et créer un groupe s'il n'existe pas
-creer_groupe_si_non_existant() {
-    local groupe=$1
-    if ! getent group "$groupe" &>/dev/null; then
-        echo "Le groupe $groupe n'existe pas. Création en cours..."
-        groupadd "$groupe"
-        if [ $? -eq 0 ]; then
-            echo "Groupe $groupe créé avec succès."
+# Fonction pour ajouter un utilisateur au groupe Administrateurs avec confirmation
+function ajout_utilisateur_admin {
+    local nom_utilisateur="$1"
+    local nom_groupe="sudo" # Groupe des administrateurs sur Ubuntu/Debian
+
+    # S'assurer que l'utilisateur est créé
+    creation_utilisateur "$nom_utilisateur"
+    
+    # Confirmation avant d'ajouter au groupe Administrateurs
+    read -p "Voulez-vous vraiment ajouter $nom_utilisateur au groupe $nom_groupe ? (oui/non): " confirmation
+    if [[ "$confirmation" == "oui" ]]; then
+        if groups "$nom_utilisateur" | grep -q "\b$nom_groupe\b"; then
+            echo "L'utilisateur $nom_utilisateur est déjà membre du groupe $nom_groupe."
         else
-            echo "Erreur lors de la création du groupe $groupe."
-            return 1
+            sudo usermod -aG "$nom_groupe" "$nom_utilisateur"
+            if [[ $? -eq 0 ]]; then
+                echo "L'utilisateur $nom_utilisateur a été ajouté au groupe $nom_groupe avec succès."
+            else
+                echo "Erreur lors de l'ajout de l'utilisateur $nom_utilisateur au groupe $nom_groupe."
+            fi
         fi
     else
-        echo "Le groupe $groupe existe déjà."
+        echo "Ajout annulé."
     fi
 }
 
-# Fonction pour ajouter un utilisateur au groupe d'administration (sudo)
-creer_utilisateur_groupe_admin() {
-    local nom_utilisateur=$1
-    local groupe_admin="sudo"
+# Fonction pour ajouter un utilisateur à un groupe local avec confirmation
+function ajout_utilisateur_groupe {
+    local nom_utilisateur="$1"
+    local nom_groupe="$2"
 
-    # Assurer que l'utilisateur est créé
-    creer_utilisateur "$nom_utilisateur" || return
-
-    # Assurer que le groupe sudo existe
-    creer_groupe_si_non_existant "$groupe_admin" || return
-
-    # Ajout de l'utilisateur au groupe sudo
-    if id -nG "$nom_utilisateur" | grep -qw "$groupe_admin"; then
-        echo "L'utilisateur est déjà membre du groupe d'administration."
-    else
-        echo "Ajout de $nom_utilisateur au groupe d'administration ($groupe_admin)..."
-        usermod -aG "$groupe_admin" "$nom_utilisateur"
-        if [ $? -eq 0 ]; then
-            echo "Utilisateur ajouté au groupe d'administration avec succès."
+    # S'assurer que l'utilisateur est créé
+    creation_utilisateur "$nom_utilisateur"
+    
+    # Confirmation avant d'ajouter au groupe local
+    read -p "Voulez-vous vraiment ajouter $nom_utilisateur au groupe $nom_groupe ? (oui/non): " confirmation
+    if [[ "$confirmation" == "oui" ]]; then
+        if groups "$nom_utilisateur" | grep -q "\b$nom_groupe\b"; then
+            echo "L'utilisateur $nom_utilisateur est déjà membre du groupe $nom_groupe."
         else
-            echo "Erreur lors de l'ajout de l'utilisateur au groupe d'administration."
+            sudo usermod -aG "$nom_groupe" "$nom_utilisateur"
+            if [[ $? -eq 0 ]]; then
+                echo "L'utilisateur $nom_utilisateur a été ajouté au groupe $nom_groupe avec succès."
+            else
+                echo "Erreur lors de l'ajout de l'utilisateur $nom_utilisateur au groupe $nom_groupe."
+            fi
         fi
-    fi
-}
-
-# Fonction pour ajouter un utilisateur à un groupe local
-creer_utilisateur_groupe_local() {
-    local nom_utilisateur=$1
-    read -p "Entrez le nom du groupe local : " groupe_local
-
-    # Assurer que l'utilisateur est créé
-    creer_utilisateur "$nom_utilisateur" || return
-
-    # Assurer que le groupe local existe
-    creer_groupe_si_non_existant "$groupe_local" || return
-
-    # Ajout de l'utilisateur au groupe local
-    if id -nG "$nom_utilisateur" | grep -qw "$groupe_local"; then
-        echo "L'utilisateur est déjà membre du groupe local."
     else
-        usermod -aG "$groupe_local" "$nom_utilisateur"
-        if [ $? -eq 0 ]; then
-            echo "Utilisateur ajouté au groupe local avec succès."
-        else
-            echo "Erreur lors de l'ajout de l'utilisateur au groupe local."
-        fi
+        echo "Ajout annulé."
     fi
 }
 
-# Fonction pour retirer un utilisateur d'un groupe local
-retirer_utilisateur_du_groupe_local() {
-    local nom_utilisateur=$1
-    read -p "Entrez le nom du groupe local : " groupe_local
+# Fonction pour retirer un utilisateur d'un groupe local avec confirmation
+function suppression_utilisateur {
+    local nom_utilisateur="$1"
+    local nom_groupe="$2"
 
-    # Vérification si l'utilisateur existe
+    # Vérifie si l'utilisateur et le groupe existent
     if ! id "$nom_utilisateur" &>/dev/null; then
         echo "Erreur : L'utilisateur $nom_utilisateur n'existe pas."
         return
     fi
 
-    # Vérification si le groupe existe
-    if ! getent group "$groupe_local" &>/dev/null; then
-        echo "Erreur : Le groupe $groupe_local n'existe pas."
-        return
-    fi
-
-    # Vérification de la présence de l'utilisateur dans le groupe local
-    if id -nG "$nom_utilisateur" | grep -qw "$groupe_local"; then
-        read -p "Voulez-vous retirer l'utilisateur du groupe local ? (oui/non) " reponse
-        if [ "$reponse" == "oui" ]; then
-            deluser "$nom_utilisateur" "$groupe_local"
-            if [ $? -eq 0 ]; then
-                echo "Utilisateur retiré du groupe local avec succès."
+    # Confirmation avant de retirer du groupe local
+    if groups "$nom_utilisateur" | grep -q "\b$nom_groupe\b"; then
+        read -p "Voulez-vous vraiment retirer $nom_utilisateur du groupe $nom_groupe ? (oui/non): " confirmation
+        if [[ "$confirmation" == "oui" ]]; then
+            sudo gpasswd -d "$nom_utilisateur" "$nom_groupe"
+            if [[ $? -eq 0 ]]; then
+                echo "L'utilisateur $nom_utilisateur a été retiré du groupe $nom_groupe avec succès."
             else
-                echo "Erreur lors du retrait de l'utilisateur du groupe local."
+                echo "Erreur lors du retrait de l'utilisateur $nom_utilisateur du groupe $nom_groupe."
             fi
         else
             echo "Retrait annulé."
         fi
     else
-        echo "L'utilisateur n'est pas membre du groupe local."
+        echo "L'utilisateur $nom_utilisateur n'est pas membre du groupe $nom_groupe."
     fi
 }
 
 # Menu principal
 while true; do
     echo "Choisissez une action :"
-    echo "1. Ajouter un utilisateur au groupe sudo (administration)"
-    echo "2. Ajouter un utilisateur au groupe local"
-    echo "3. Retirer un utilisateur du groupe local"
+    echo "1. Ajouter un utilisateur au groupe Administrateurs"
+    echo "2. Ajouter un utilisateur à un groupe local"
+    echo "3. Retirer un utilisateur d'un groupe local"
     echo "4. Quitter"
-    read -p "Entrez votre choix : " choix
+    read -p "Entrez votre choix: " choix
 
     case $choix in
         1)
-            read -p "Entrez le nom de l'utilisateur : " utilisateur
-            creer_utilisateur_groupe_admin "$utilisateur"
+            read -p "Entrez le nom de l'utilisateur: " utilisateur
+            ajout_utilisateur_admin "$utilisateur"
             ;;
         2)
-            read -p "Entrez le nom de l'utilisateur : " utilisateur
-            creer_utilisateur_groupe_local "$utilisateur"
+            read -p "Entrez le nom de l'utilisateur: " utilisateur
+            read -p "Entrez le nom du groupe local: " groupe
+            ajout_utilisateur_groupe "$utilisateur" "$groupe"
             ;;
         3)
-            read -p "Entrez le nom de l'utilisateur : " utilisateur
-            retirer_utilisateur_du_groupe_local "$utilisateur"
+            read -p "Entrez le nom de l'utilisateur: " utilisateur
+            read -p "Entrez le nom du groupe local: " groupe
+            suppression_utilisateur "$utilisateur" "$groupe"
             ;;
         4)
             echo "Quitter le script."
@@ -154,5 +138,5 @@ while true; do
             echo "Option invalide. Veuillez choisir une option valide."
             ;;
     esac
-    echo
+    echo ""
 done
