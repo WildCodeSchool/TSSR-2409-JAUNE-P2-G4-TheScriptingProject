@@ -1,5 +1,5 @@
 # Fonction pour arrêter l'ordinateur
-function Fonction-Arret {
+function Arret {
     Write-Output "Voulez-vous vraiment arrêter ?"
     Write-Output "1 - Arrêt immédiat"
     Write-Output "2 - Arrêt dans une minute"
@@ -26,7 +26,7 @@ function Fonction-Arret {
 }
 
 # Fonction pour redémarrer l'ordinateur
-function Fonction-Redemarrage {
+function Redemarrage {
     Write-Output "Voulez-vous vraiment redémarrer ?"
     Write-Output "1 - Redémarrage immédiat"
     Write-Output "2 - Redémarrage dans une minute"
@@ -53,7 +53,7 @@ function Fonction-Redemarrage {
 }
 
 # Fonction pour verrouiller la session
-function Fonction-Verrouillage {
+function Verrouillage {
     Write-Output "Verrouillage de la session..."
     rundll32.exe user32.dll,LockWorkStation
 }
@@ -68,9 +68,9 @@ while ($true) {
     $choixUtilisateur = Read-Host "Choix"
 
     switch ($choixUtilisateur) {
-        1 { Fonction-Arret }
-        2 { Fonction-Redemarrage }
-        3 { Fonction-Verrouillage }
+        1 { Arret }
+        2 { Redemarrage }
+        3 { Verrouillage }
         4 {
             Write-Output "Sortie du programme."
             break
