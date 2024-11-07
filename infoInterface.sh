@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Script Bash pour connaître des informations réseau
 echo "===================================="
 echo "Informations sur l'ordinateur client"
 echo "===================================="

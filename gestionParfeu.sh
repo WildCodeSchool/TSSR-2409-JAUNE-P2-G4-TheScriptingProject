@@ -1,10 +1,10 @@
 #!/bin/bash
 
-echo "=============================="
-echo "Gestion des pare-feux"
-echo "=============================="
-
 # Script Bash pour activer ou désactiver le pare-feu 
+echo "======================"
+echo "Gestion des pare-feux"
+echo "======================"
+echo "" 
 
 while true; do
     echo ""

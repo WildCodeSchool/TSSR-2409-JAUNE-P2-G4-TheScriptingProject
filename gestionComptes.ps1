@@ -1,6 +1,9 @@
-Write-Output "=============================="
-Write-Output "Gestion des utilisateurs et des groupes"
-Write-Output "=============================="
+# Script PowerShell pour gérer les utilisateurs dans le groupe admin ou local
+
+Write-Output "===================="
+Write-Output "Gestion des groupes"
+Write-Output "===================="
+Write-Output ""
 
 # Fonction pour créer un utilisateur s'il n'existe pas
 function Création_Utilisateur {

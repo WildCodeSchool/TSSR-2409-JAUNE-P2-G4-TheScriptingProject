@@ -1,3 +1,5 @@
+# Script PowerShell connaître des informations réseau
+
 Write-Output "===================================="
 Write-Output "Informations sur l'ordinateur client"
 Write-Output "===================================="

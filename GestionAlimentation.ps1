@@ -1,3 +1,10 @@
+# Script PowerShell pour gérer l'alimentation d'un ordinateur
+
+Write-Output "====================="
+Write-Output "Gestion alimentation"
+Write-Output "====================="
+Write-Output ""
+
 # Fonction pour arrêter l'ordinateur
 function Arret {
     Write-Output "Voulez-vous vraiment arrêter ?"

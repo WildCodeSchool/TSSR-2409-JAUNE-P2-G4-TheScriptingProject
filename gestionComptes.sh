@@ -1,8 +1,10 @@
 #!/bin/bash
 
-echo "=============================="
+# Script Bash pour gérer les utilisateurs dans le groupe admin ou local
+echo "===================="
 echo "Gestion des groupes"
-echo "=============================="
+echo "===================="
+echo "" 
 
 # Fonction pour créer un utilisateur s'il n'existe pas
 function creation_utilisateur {

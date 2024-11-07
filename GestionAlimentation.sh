@@ -1,8 +1,10 @@
 #!/bin/bash
 
-echo "=============================="
+# Script Bash pour gérer l'alimentation d'un ordinateur
+echo "======================"
 echo "Gestion alimentation"
-echo "=============================="
+echo "======================"
+echo "" 
 
 # Fonction pour arrêter l'ordinateur
 fonction_arret() {

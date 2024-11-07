@@ -1,8 +1,10 @@
 #!/bin/bash
 
-echo "=============================="
+# Script Bash pour connaître des informations utilisateur
+echo "==========================="
 echo "Informations utilisateurs"
-echo "=============================="
+echo "==========================="
+echo "" 
 
 # Fonction pour afficher le menu
 afficher_menu() {

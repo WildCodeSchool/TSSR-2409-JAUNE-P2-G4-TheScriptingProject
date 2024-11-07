@@ -1,5 +1,10 @@
 # Script PowerShell pour activer ou désactiver le pare-feu 
 
+Write-Output "=============================="
+Write-Output "Gestion des pare-feux"
+Write-Output "=============================="
+Write-Output ""
+
 function Show-Menu {
     Write-Output ""
     Write-Output "--- Menu Principal ---"
