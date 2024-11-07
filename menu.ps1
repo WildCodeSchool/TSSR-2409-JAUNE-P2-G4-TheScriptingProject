@@ -241,7 +241,7 @@ function menu3
         8
             {
                 # Lancement Version de l'OS
-                verionOS
+                versionOS
             }
         9
             {
@@ -318,6 +318,13 @@ function menu3
     return
 }
 
+
+# Dot-sourcing des différentes fonctions
+. $PSScriptRoot\ActionsUtilisateur.ps1
+. $PSScriptRoot\ActionsClient.ps1
+. $PSScriptRoot\InfosUtilisateur.ps1
+. $PSScriptRoot\InfosClient.ps1
+. $PSScriptRoot\journalisation.ps1
 
 # Début journalisation
 $date=$(Get-Date -Format "yyyymmdd-HHmmss")
