@@ -5,7 +5,7 @@ Write-Output "===================="
 Write-Output ""
 
 # Ajouter un utilisateur au groupe Administrateurs 
-function Ajouter-UtilisateurAdmin {
+function ajout_admin {
     param ([string]$NomUtilisateur)
     $NomGroupe = "Administrateurs"  # Groupe des administrateurs
 
@@ -14,7 +14,7 @@ function Ajouter-UtilisateurAdmin {
 }
 
 # Ajouter un utilisateur à un groupe local 
-function Ajouter-UtilisateurGroupeLocal {
+function ajout_groupe {
     param ([string]$NomUtilisateur, [string]$NomGroupe)
 
     Add-LocalGroupMember -Group $NomGroupe -Member $NomUtilisateur
@@ -22,7 +22,7 @@ function Ajouter-UtilisateurGroupeLocal {
 }
 
 # Retirer un utilisateur d'un groupe local 
-function Retirer-UtilisateurGroupeLocal {
+function retirer_groupe {
     param ([string]$NomUtilisateur, [string]$NomGroupe)
 
     Remove-LocalGroupMember -Group $NomGroupe -Member $NomUtilisateur
@@ -41,17 +41,17 @@ while ($true) {
     switch ($choix) {
         1 {
             $utilisateur = Read-Host "Entrez le nom de l'utilisateur"
-            Ajouter-UtilisateurAdmin -NomUtilisateur $utilisateur
+            ajout_admin -NomUtilisateur $utilisateur
         }
         2 {
             $utilisateur = Read-Host "Entrez le nom de l'utilisateur"
             $groupe = Read-Host "Entrez le nom du groupe local"
-            Ajouter-UtilisateurGroupeLocal -NomUtilisateur $utilisateur -NomGroupe $groupe
+            ajout_groupe -NomUtilisateur $utilisateur -NomGroupe $groupe
         }
         3 {
             $utilisateur = Read-Host "Entrez le nom de l'utilisateur"
             $groupe = Read-Host "Entrez le nom du groupe local"
-            Retirer-UtilisateurGroupeLocal -NomUtilisateur $utilisateur -NomGroupe $groupe
+            retirer_groupe -NomUtilisateur $utilisateur -NomGroupe $groupe
         }
         4 {
             Write-Output "Quitter le script."
