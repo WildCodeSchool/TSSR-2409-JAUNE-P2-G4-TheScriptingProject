@@ -4,36 +4,42 @@
 echo "===================="
 echo "Gestion des groupes"
 echo "===================="
-echo "" 
+echo ""
 
-# Fonction pour créer un utilisateur s'il n'existe pas
-function creation_utilisateur {
+# Fonction pour vérifier si un utilisateur existe et afficher la liste des utilisateurs humains en cas d'erreur
+function verifier_utilisateur {
     local nom_utilisateur="$1"
-    
-    # Vérifie si l'utilisateur existe
-    if id "$nom_utilisateur" &>/dev/null; then
-        echo "L'utilisateur $nom_utilisateur existe déjà."
-        return 0
-    else
-        echo "L'utilisateur $nom_utilisateur n'existe pas. Création en cours..."
-        sudo useradd "$nom_utilisateur"
-        if [[ $? -eq 0 ]]; then
-            echo "Utilisateur $nom_utilisateur créé avec succès."
-            return 0
-        else
-            echo "Erreur lors de la création de l'utilisateur $nom_utilisateur."
-            return 1
-        fi
+    if ! id "$nom_utilisateur" &>/dev/null; then
+        echo "Erreur : L'utilisateur $nom_utilisateur n'existe pas."
+        echo "Liste des utilisateur existants :"
+        # Filtre pour afficher uniquement les utilisateurs humains avec un shell interactif
+        awk -F: '$7 ~ /(bash|sh|zsh)/ {print $1}' /etc/passwd
+        return 1
     fi
+    return 0
+}
+
+# Fonction pour vérifier si un groupe existe et afficher la liste des groupes en cas d'erreur
+function verifier_groupe {
+    local nom_groupe="$1"
+    if ! getent group "$nom_groupe" &>/dev/null; then
+        echo "Erreur : Le groupe $nom_groupe n'existe pas."
+        echo "Liste des groupes existants :"
+        cut -d: -f1 /etc/group  # Affiche la liste des groupes
+        return 1
+    fi
+    return 0
 }
 
 # Fonction pour ajouter un utilisateur au groupe Administrateurs avec confirmation
 function ajout_utilisateur_admin {
     local nom_utilisateur="$1"
-    local nom_groupe="sudo" # Groupe des administrateurs sur Ubuntu/Debian
-
-    # S'assurer que l'utilisateur est créé
-    creation_utilisateur "$nom_utilisateur"
+    local nom_groupe="sudo"  # Groupe des administrateurs sur Ubuntu/Debian
+    
+    # Vérifie que l'utilisateur existe
+    if ! verifier_utilisateur "$nom_utilisateur"; then
+        return
+    fi
     
     # Confirmation avant d'ajouter au groupe Administrateurs
     read -p "Voulez-vous vraiment ajouter $nom_utilisateur au groupe $nom_groupe ? (oui/non): " confirmation
@@ -57,9 +63,14 @@ function ajout_utilisateur_admin {
 function ajout_utilisateur_groupe {
     local nom_utilisateur="$1"
     local nom_groupe="$2"
-
-    # S'assurer que l'utilisateur est créé
-    creation_utilisateur "$nom_utilisateur"
+    
+    # Vérifie que l'utilisateur et le groupe existent
+    if ! verifier_utilisateur "$nom_utilisateur"; then
+        return
+    fi
+    if ! verifier_groupe "$nom_groupe"; then
+        return
+    fi
     
     # Confirmation avant d'ajouter au groupe local
     read -p "Voulez-vous vraiment ajouter $nom_utilisateur au groupe $nom_groupe ? (oui/non): " confirmation
@@ -83,13 +94,15 @@ function ajout_utilisateur_groupe {
 function suppression_utilisateur {
     local nom_utilisateur="$1"
     local nom_groupe="$2"
-
-    # Vérifie si l'utilisateur et le groupe existent
-    if ! id "$nom_utilisateur" &>/dev/null; then
-        echo "Erreur : L'utilisateur $nom_utilisateur n'existe pas."
+    
+    # Vérifie que l'utilisateur et le groupe existent
+    if ! verifier_utilisateur "$nom_utilisateur"; then
         return
     fi
-
+    if ! verifier_groupe "$nom_groupe"; then
+        return
+    fi
+    
     # Confirmation avant de retirer du groupe local
     if groups "$nom_utilisateur" | grep -q "\b$nom_groupe\b"; then
         read -p "Voulez-vous vraiment retirer $nom_utilisateur du groupe $nom_groupe ? (oui/non): " confirmation
