@@ -58,17 +58,22 @@ function menu2
         5
             {
                 # Lancement Ajout à un groupe d'administration
-                # fonction gpe admin
+                $utilisateur = Read-Host "Entrez le nom de l'utilisateur"
+                Ajouter_Utilisateur_Admin -NomUtilisateur $utilisateur
             }
         6
             {
                 # Lancement Ajout à un groupe local
-                # fonction gpe local
+                $utilisateur = Read-Host "Entrez le nom de l'utilisateur"
+                $groupe = Read-Host "Entrez le nom du groupe local"
+                Ajouter_Utilisateur_Groupe_Local -NomUtilisateur $utilisateur -NomGroupe $groupe
             }
         7
             {
                 # Lancement Sortie d’un groupe local
-                # fonction rm group
+                $utilisateur = Read-Host "Entrez le nom de l'utilisateur"
+                $groupe = Read-Host "Entrez le nom du groupe local"
+                Supprimer_Utilisateur_Groupe_Local -NomUtilisateur $utilisateur -NomGroupe $groupe
             }
         8
             {
@@ -231,12 +236,12 @@ function menu3
         6
             {
                 # Lancement Droits/permissions de l’utilisateur sur un dossier
-                
+                droitDossier
             }
         7
             {
                 # Lancement Droits/permissions de l’utilisateur sur un fichier
-                
+                droitFichier
             }
         8
             {
@@ -246,17 +251,17 @@ function menu3
         9
             {
                 # Lancement Nombre de disque
-                
+                Get-Disk
             }
         10
             {
                 # Lancement Partition (nombre, nom, FS, taille) par disque
-                disk2
+                Get-Partition
             }
         11
             {
                 # Lancement Espace disque restant par partition/volume
-                disk3
+                Get-WmiObject -Class Win32_LogicalDisk
             }
         12
             {
@@ -266,22 +271,37 @@ function menu3
         13
             {
                 # Lancement Liste des lecteurs monté (disque, CD, etc.)
-                disk5
+                Write-Host "La liste des lecteurs montés sur l'ordinateur est : "
+                Get-PSDrive | Where-Object -Property Root | Select-Object -Property Name,Root
             }
         14
             {
                 # Lancement Nombre d'interface
-                
+                # Nombre d'interfaces réseau actives
+                Write-Output "Nombre d'interfaces réseau actives :"
+                $numInterfaces = (Get-NetAdapter | Where-Object { $_.Status -eq "Up" }).Count
+                Write-Output "- $numInterfaces interfaces actives détectées"
+                Write-Output ""
             }
         15
             {
                 # Lancement Adresse IP de chaque interface
-                
+                Write-Output "Adresse IP de chaque interface :"
+                Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -ne "127.0.0.1" } | ForEach-Object {
+                    Write-Output "- Interface $($_.InterfaceAlias) : IP $($_.IPAddress)"
+                }
+                Write-Output ""
             }
         16
             {
                 # Lancement Adresse Mac
-                
+                # Adresse MAC de chaque interface
+                Write-Output "Adresse MAC de chaque interface :"
+                Get-NetAdapter | ForEach-Object {
+                    if ($_.MacAddress) {
+                        Write-Output "- Interface $($_.Name) : MAC $($_.MacAddress)"
+                    }
+                }
             }
         17
             {
