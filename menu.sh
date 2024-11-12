@@ -3,6 +3,7 @@
 # Je veux proposer un menu à trois entrées : Action, Requête d'information ou Sortie du script ;
 # Je veux que l'on revienne à ce menu si l'on en fait la demande => fonction
 
+
 # Fonction Menu2 (Actions)
 function menu2()
 {
