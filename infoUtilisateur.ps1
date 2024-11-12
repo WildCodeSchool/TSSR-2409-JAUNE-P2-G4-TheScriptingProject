@@ -24,7 +24,7 @@ if ($args.Count -eq 0) {
 $utilisateur = $args[0]
 
 # Fonction pour vérifier si l'utilisateur existe
-function Verifier-Utilisateur {
+function VerifUtilisateur {
     $userExists = Get-LocalUser -Name $utilisateur
     if (-not $userExists) {
         Write-Output "Erreur : L'utilisateur $utilisateur n'existe pas."
@@ -33,7 +33,7 @@ function Verifier-Utilisateur {
 }
 
 # Appel de la fonction pour vérifier l'utilisateur
-Verifier-Utilisateur
+VerifUtilisateur
 
 # Boucle principale pour afficher le menu
 while ($true) {
