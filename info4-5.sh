@@ -1,8 +1,8 @@
 #! /bin/bash
 
 # Fonction Groupe d’appartenance d’un utilisateur
-#read -p "Quel est l'utilisateur dont vous souhaitez connaître les groupes ?" user
-#groups $user
+read -p "Quel est l'utilisateur dont vous souhaitez connaître les groupes ?" user
+groups $user
 
 # Fonction Historique des commandes exécutées par l'utilisateur
 echo -e "\n"
