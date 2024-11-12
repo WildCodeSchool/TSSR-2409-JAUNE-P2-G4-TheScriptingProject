@@ -1,5 +1,19 @@
 #!/bin/bash
 # Fonction Détail des partitions
+function journalisation()
+{
+    # Définition des variables Date/Heure/Utilisateur
+    date=$(date +%F | tr -d '-')
+    heure=$(date +%T | tr -d ':')
+    user=$(w -h | cut -d ' ' -f1)
+
+    # Récupération de l'action à enregistrer placée en argument
+    action=$1
+
+    # Compilation du tout dans le fichier log
+    echo "$date-$heure-$user-$action" >> /var/log/log_evt.log
+}
+
 function disk2()
 {
     # 2)Détails de partitionnement
@@ -29,6 +43,7 @@ function disk2()
                 echo -e "La partition \e[0;32m$a\e[0;m, d'une \e[0;32mtaille de $b\e[0;m et \e[0;32mau format $c\e[0;m"
             done < /tmp/part.txt
             echo -e "\n"
+            journalisation "Détail_partitionnement-$disk"
     
     # -) Message erreur & Liste des disques observables
     else
@@ -40,6 +55,7 @@ function disk2()
 
         echo -e "\e[0;33mLa liste des disques disponibles est\e[1;36m $err\e[0;m"
         echo -e "\n"
+        journalisation "Détail_partitionnement-Erreur-$disk"
     fi
 
     # Possible relance de la fonction
@@ -86,11 +102,13 @@ function disk3()
         # +) Appel fonction d'information sur l'espace disque
             then
                 spacedisk $disk
+                journalisation "Espace_disque-$disk"
         # -) Message erreur & Liste des disques disponibles
             else
                 echo -e "\e[0;31mErreur - Le disque sélectionné est inconnu\e[0;m"
                 disks=$(lsblk | grep disk | awk -v RS= '{print $1}')
                 echo -e "\e[0;33mLa liste des disques disponibles est\e[1;35m $disks\e[0;m"
+                journalisation "Espace_disque-Erreur-$disk"
             fi
         ;;
 
@@ -103,12 +121,14 @@ function disk3()
 
         # +) Récupérer espace libre sur la partition
             then
+                journalisation "Espace_partition-$part"
                 echo -e "\n\n"
                 df -h | grep $part | sort | awk '{print "Il reste " $4 " disponibles sur " $1}'
                 echo -e "\n\n"
 
         # -) Message erreur & Affichage liste des partitions pour sélection & Retour Sélection Disque/Partition
             else
+                journalisation "Espace_partition-Erreur-$part"
                 echo -e "\e[0;31mErreur - La partition sélectionnée n'existe pas\e[0;m"
                 list=$(lsblk | grep part | awk '{print $1}')
                 echo -e "\e[0;33mLes partitions disponibles sont :\e[0;m \e[0;35m\n$list\e[0;m"
@@ -134,12 +154,13 @@ function disk4()
     # Demande chemin réseau du répertoire
     echo "Quel est le nom du répertoire dont vous souhaitez connaître la taille ?"
     read -p "" path
-
+    
     # Vérification existence du répertoire
     if du $path > /dev/null
 
     # +) Affichage de l'espace occupé par le répertoire
     then
+        journalisation "Espace_occupe_par_repertoire-$path"
         du -sh $path | awk '{print $2 " " $1}' > /tmp/space.txt
         while read a b
         do                   
@@ -150,6 +171,7 @@ function disk4()
 
     # -) Message erreur
     else
+        journalisation "Espace_occupe_par_repertoire-Erreur-$path"
         echo -e "\n"
         echo -e "\e[0;31mErreur - Le chemin spécifié est introuvable.\e[0;m"
         echo -e "\e[0;33mMerci d'entrer le chemin réseau complet\e[0;m"
@@ -172,6 +194,7 @@ function disk5()
         echo -e "Le volume \e[0;32m$a\e[0;m est monté sur \e[0;32m$b\e[0;m"
     done < /tmp/awk.txt
     echo -e "\n"
+    journalisation "Liste_lecteurs_montés"
 
 }
 
@@ -183,7 +206,7 @@ function infodisk()
     echo -e "1-\e[0;36mNombre de disques\e[0;m présent sur l'ordinateur"
     echo -e "2-\e[0;36mDétails des partitions\e[0;m présente sur un disque"
     echo -e "3-\e[0;36mEspace disponible\e[0;m"
-    echo -e "4-\e[0;36mEmplacement d'un dossier\e[0;m"
+    echo -e "4-\e[0;36mEspace disque utilisé par un dossier\e[0;m"
     echo -e "5-\e[0;36mLecteurs montés\e[0;m sur l'ordinateur"
     echo "6-Retour au menu précédent"
     echo "0-Retour au menu principal"
@@ -201,6 +224,7 @@ function infodisk()
         echo -e "\n"
         echo -e "Il y a \e[0;32m$disk disque(s)\e[0;m sur la machine."
         echo -e "\n"
+        journalisation "Nombre_Disques"
     ;;
 
     2)  
