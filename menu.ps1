@@ -113,7 +113,7 @@ function menu2
         15
             {
                 # Lancement Fonction Prise en main à distance GUI
-                
+                connexionGui
             }
         16
             {
@@ -132,17 +132,17 @@ function menu2
         18
             {
                 # Lancement Installation de logiciel
-                # Fonction install-software
+                Installer_Logiciel
             }
         19
             {
                 # Lancement Désinstallation de logiciel
-                # Fonction uninstall-software
+                Desinstaller_Logiciel
             }
         20
             {
                 # Lancement Exécution de script sur la machine distante
-                # Fonction scriptexec
+                Executer_ScriptDistant
             }
         0
             {
@@ -226,12 +226,12 @@ function menu3
         4
             {
                 # Lancement Groupe d’appartenance d’un utilisateur
-                
+                getGroups               
             }
         5
             {
                 # Lancement Historique des commandes exécutées par l'utilisateur
-                
+                userhistory              
             }
         6
             {
@@ -306,7 +306,7 @@ function menu3
         17
             {
                 # Lancement Liste des ports ouverts
-                
+                PortsOuverts
             }
         18
             {
@@ -316,12 +316,12 @@ function menu3
         19
             {
                 # Lancement Recherche des evenements dans le fichier log_evt.log pour un utilisateur
-                
+                Write-Host "Fonction non configurée"
             }
         20
             {
                 # Lancement Recherche des evenements dans le fichier log_evt.log pour un ordinateur
-                
+                Write-Host "Fonction non configurée"                
             }
         0
             {

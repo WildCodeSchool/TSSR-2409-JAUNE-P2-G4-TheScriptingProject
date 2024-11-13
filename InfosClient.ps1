@@ -8,7 +8,6 @@ function versionOS() {
     Write-Host "Le systeme d'exploitation acuel sur cette ordinateur est: "$OSVersion.caption""
 }
 
-
 # Nombre de disque
 # Déjà dans le menu
 
@@ -66,7 +65,12 @@ function disk4
 # Déjà dans le menu
 
 # Liste des ports ouverts
-
+function PortsOuverts {
+    Clear-Host
+    Write-Host "Les ports réseaux ouverts sur le système sont:"
+    Get-NetTCPConnection -State Listen | Select-Object -Property LocalPort | `
+    Sort-Object -Property localport -Unique    
+    }  
 
 # Statut du pare-feu
 # Déjà dans le menu
