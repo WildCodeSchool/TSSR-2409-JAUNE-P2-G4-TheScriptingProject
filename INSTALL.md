@@ -89,6 +89,22 @@ $PSVersionTable.PSVersion
 
 ## Installer NuGet
 
+ 1- Ouvrez PowerShell 7 en tant qu’administrateur.
+
+ - Installer le fournisseur NuGet pour PowerShell :
+
+    - Si vous n’avez jamais utilisé NuGet dans PowerShell, vous devez d’abord installer le fournisseur NuGet. PowerShell le proposera automatiquement lors de la première utilisation de la commande Install-Module.
+   Exemple, exécutez la commande suivante pour installer un module depuis la galerie PowerShell. Cela déclenchera l’installation du fournisseur NuGet :
+```
+Powershell
+Install-Module -Name PackageManagement -Force
+```
+
+Exécutez la commande suivante pour voir la liste des sources de packages disponibles NuGet devrait être présent dans la liste des sources de packages.:
+```
+Powershell
+Get-PackageSource
+```
 ## Activer le bureau distant sur le client
 
  - Activer le Bureau à distance via les Paramètres de Windows
