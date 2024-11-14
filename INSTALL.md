@@ -141,4 +141,3 @@ Install-Module -Name PSWindowsUpdate -Force
 ```
  PSWindowsUpdate est maintenant installé et prêt à être utilisé 
 
-# III. F.A.Q.
