@@ -4,6 +4,7 @@
     - Configurer la fonctionnalité SSH
     - Configurer la fonctionnalité WinRM
     - Configurer C:\Windows\System32\drivers\etc\hosts
+    - Installer PowerShell 7
 - Serveur Linux sous Debian 12
     - Configurer la fonctionnalité SSH
     - Configurer /etc/hosts
@@ -11,11 +12,16 @@
     - Désactiver les pare-feux
     - Configurer la fonctionnalité SSH
     - Configurer C:\Windows\System32\drivers\etc\hosts
+    - Installer Fonctionnalité NuGet
+    - Activer le Bureau distant
+    - Installer Module PSWindowsUpdate
 - Client Linux sous Ubuntu 24.04
     - Configurer la fonctionnalité SSH
     - Configurer /etc/hosts
 
 # II. Installation et Configuration
+## Désactivation Pare-feux
+
 ## Configuration SSH et WinRM
 - Windows
     - Configurer le service SSH sur le serveur
@@ -52,5 +58,12 @@
     172.16.40.10    SRVLX01
     172.16.40.30    CLILIN01
     ```
+## Installation Powershell 7
+
+## Installer NuGet
+
+## Activer le bureau distant sur le client
+
+## Installer le module PSWindowsUpdate sur le client
 
 # III. F.A.Q.
