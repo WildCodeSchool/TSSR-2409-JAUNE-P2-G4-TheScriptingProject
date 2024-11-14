@@ -49,6 +49,11 @@
         ```
     - Sur le client Ubuntu
         `sudo apt install openssh-client`
+      
+  - Modification du mot de passe root
+        ```
+        sudo passwd root 
+        ```
 
 ## Configuration fichiers Hosts
 - Windows
