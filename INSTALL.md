@@ -125,7 +125,7 @@ Get-PackageSource
 
 ## Installer le module PSWindowsUpdate sur le client
 
- - Voici la manière la plus simple d'installer le module PSWindowsUpdate :
+ - Suivre les étapes suivantes :
 
     - 1 - Ouvrez PowerShell en tant qu'administrateur.
 
