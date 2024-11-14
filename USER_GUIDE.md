@@ -8,14 +8,21 @@ Si vous êtes déjà situé dans le dossier contenant le script, voici comment l
 
 ## 1. Lancer un script Shell sous Linux 
 
-- Assurez-vous que le script est exécutable : Si ce n'est pas déjà fait, rendez-le exécutable avec la commande suivante :
+- 1 - lancer  la commande
 ```bash
-    chmod +x nom_du_script.sh
+lanceur.sh
 ```
-Si vous êtes dans le dossier contenant le script, exécutez-le directement en utilisant :
+- 2 - On vous demandera la cible que vous souhaitez : cible ip ou nom machine
+- 3 - Choisir sur quel compte se connecter : wilder
+- 4 - Demande du mot de passe mot de wilder pour transferer le fichier via scp 
+- 5 - Il le stock dans le /tmp de la machine client
+- 6 - Demande de mot de passe pour connexion ssh
+- 7 - Connexion via ssh depuis la debian vers la ubuntu sous le compte wilder
+- 8 - lancement du script avec la commande suivante : 
+
 
 ```bash
-./nom_du_script.sh
+bash /tmp/script.sh
 ```
 
 ## 2. Lancer un script PowerShell sous Windows
