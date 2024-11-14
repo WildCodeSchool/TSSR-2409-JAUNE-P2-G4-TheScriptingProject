@@ -17,6 +17,7 @@
 - Client Linux sous Ubuntu 24.04
     - Configurer la fonctionnalité SSH
     - Configurer /etc/hosts
+    - Modification du mot de passe root
 
 # II. Installation et Configuration
 ## Désactivation Pare-feux
