@@ -29,6 +29,19 @@
         - Ensuite, démarrer le service : `Start-Service sshd`
         - Puis configurer le service pour qu'il démarre automatiquement : `Set-Service -Name sshd -StartupType "Automatic"`
     - Configurer le service SSH sur le client : `Add-WindowsCapability -Online -Name OpenSSH.Client`
+    - Générer une clé SSH avec la commande suivante :
+       ```
+       ssh-keygen -t rsa -b 4096
+       ```
+       et la partagé au client avec la commande :
+
+        ```
+        ssh-copy-id utilisateur@ip_machine_client
+        ```
+  - Vérification de la connexion shh avec la commande :
+  ```
+    ssh root@adresseIp 172.16.40.30
+  ```
     - Configurer WinRM sur le serveur
         - Démarrer le service WinRM : `Start-Service -Name WinRM`
         - Puis configurer le service pour qu'il démarre automatiquement : `Set-Service -Name WinRM -StartupType "Automatic"`
