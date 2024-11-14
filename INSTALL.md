@@ -11,7 +11,6 @@
 - Client Windows sous Windows 10
     - Désactiver les pare-feux
     - Configurer la fonctionnalité SSH
-    - Configurer C:\Windows\System32\drivers\etc\hosts
     - Installer Fonctionnalité NuGet
     - Activer le Bureau distant
     - Installer Module PSWindowsUpdate
