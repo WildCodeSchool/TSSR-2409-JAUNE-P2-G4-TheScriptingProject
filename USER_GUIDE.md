@@ -14,7 +14,7 @@ lanceur.sh
 ```
 - 2 - On vous demandera la cible que vous souhaitez : cible ip ou nom machine
 - 3 - Choisir sur quel compte se connecter : wilder
-- 4 - Demande du mot de passe mot de wilder pour transferer le fichier via scp 
+- 4 - Demande du mot de passe wilder pour transferer le fichier via scp 
 - 5 - Il le stock dans le /tmp de la machine client
 - 6 - Demande de mot de passe pour connexion ssh
 - 7 - Connexion via ssh depuis la debian vers la ubuntu sous le compte wilder
