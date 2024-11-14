@@ -47,6 +47,11 @@ Ce projet a été réalisé à trois, Marilyn, Christophe et Paul-Alban (P.A.), 
 - 
 
 # VI. Suggestions d'amélioration
-- 
+
+- Les paramètres de sécurité pourraient être renforcés, par exemple en intégrant ESM, mais nos compétences actuelles ne nous permettent pas de mettre en place cette solution.
+
+- Changer les ports par défaut pour SSH : Choisir des ports non standard pour éviter les tentatives de connexion automatique.
 
 # VII. Conclusion
+
+- En conclusion, ce projet nous a permis de créer un script d’administration automatisant des tâches entre un serveur et des clients, tout en nous familiarisant avec des outils de gestion à distance comme SSH pour Linux et WinRM pour Windows. Nous avons atteint nos objectifs, et cette expérience a renforcé nos compétences en scripting et en administration réseau. Malgré des débuts où nous n’étions pas toujours sur la même longueur d'onde, nous avons rapidement ajusté notre coordination et relevé ensemble les défis techniques avec succès.
