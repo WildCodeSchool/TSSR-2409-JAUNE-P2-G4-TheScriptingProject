@@ -60,10 +60,64 @@
     ```
 ## Installation Powershell 7
 
+- 1 - Téléchargez PowerShell 7 :
+
+    - Ouvrez votre navigateur sur le serveur.
+    - Rendez-vous sur la page de téléchargement officielle : https://github.com/PowerShell/PowerShell/releases.
+    - Recherchez la dernière version stable de PowerShell 7.
+    - Téléchargez le fichier .msi.
+
+ - 2 - Installez PowerShell 7 :
+
+    - Ouvrez le fichier .msi téléchargé pour lancer l’installation.
+    - Suivez les étapes de l’assistant d’installation :
+        - Acceptez les conditions de licence.
+        - Laissez l’emplacement d’installation par défaut.
+        - Cochez "Add to PATH Environment Variable" pour que PowerShell 7 soit accessible depuis n'importe où dans l'invite de commande.
+        - Cliquez sur Installer et laissez l’installation se terminer.
+
+ - 3 - Vérifiez l’installation :
+
+    - Ouvrez une invite de commande ou PowerShell.
+    - Tapez pwsh pour démarrer PowerShell 7.
+    - Pour confirmer la version, exécutez la commande suivante dans PowerShell 7 :
+```
+Powershell
+
+$PSVersionTable.PSVersion
+```
+
 ## Installer NuGet
 
 ## Activer le bureau distant sur le client
 
+ - Activer le Bureau à distance via les Paramètres de Windows
+
+    - 1 - Ouvrir les Paramètres :
+        Cliquez sur le bouton Démarrer, puis sélectionnez Paramètres.
+
+    - 2 - Naviguer vers Système :
+        Dans la fenêtre Paramètres, sélectionnez Système.
+
+    - 3 - Accéder aux paramètres de Bureau à distance :
+        Dans le menu de gauche, faites défiler vers le bas et cliquez sur Bureau à distance.
+
+    - 4 - Activer le Bureau à distance :
+        Dans la section Bureau à distance, faites glisser le bouton Activer le Bureau à distance sur Activé.
+        Une fenêtre de confirmation apparaît. Cliquez sur Confirmer pour activer le Bureau à distance.
+
+
 ## Installer le module PSWindowsUpdate sur le client
+
+ - Voici la manière la plus simple d'installer le module PSWindowsUpdate :
+
+    - 1 - Ouvrez PowerShell en tant qu'administrateur.
+
+    - 2 - Exécutez la commande suivante pour installer le module directement depuis la PowerShell Gallery :
+```
+Powershell
+Install-Module -Name PSWindowsUpdate -Force
+```
+ PSWindowsUpdate est maintenant installé et prêt à être utilisé 
 
 # III. F.A.Q.
