@@ -44,7 +44,8 @@ Ce projet a été réalisé à trois, Marilyn, Christophe et Paul-Alban (P.A.), 
 - Complexité des fonctions
     - Le groupe a eu globalement tendance à complexifier les tâches demandées et à rendre des fonctions très complètes au prix d'un temps passé à leur rédaction bien trop long.
     - Les dernières fonctions réalisées l'ont été plus simplement tout en respectant les résultats attendus.
-- 
+- Exécution d'un script hébergé sur un serveur Windows à destination d'un client Windows
+    - Le groupe n'est pas parvenu à exécuter à distance un script intégralement hébergé sur un serveur. La solution fonctionnelle mise en place par le groupe consiste en l'exécution d'un script, hébergé sur le serveur, appelant suite à une connexion SSH un script enfant situé sur le client cible.
 
 # VI. Suggestions d'amélioration
 
