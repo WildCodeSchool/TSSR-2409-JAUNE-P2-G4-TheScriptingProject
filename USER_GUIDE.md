@@ -24,9 +24,6 @@ lanceur.sh
 ```bash
 bash /tmp/script.sh
 ```
-- Menu Shell
-  
-![ menu Debian](./Images/linuxAction.png)
 
 ## 2. Lancer un script PowerShell sous Windows
 
@@ -35,9 +32,6 @@ Si vous êtes dans le dossier contenant le script PowerShell, lancez-le simpleme
 ```powershell
 ./nom_du_script.ps1
 ```
-- Menu Powershell
-  
-![ menu Powershell](./Images/powershell2.png)
 
 # II. Utilisation avancée
 
