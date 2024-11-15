@@ -30,7 +30,7 @@ bash /tmp/script.sh
 Si vous êtes dans le dossier contenant le script PowerShell, lancez-le simplement en utilisant :
 
 ```powershell
-./nom_du_script.ps1
+./script.ps1
 ```
 
 # II. Utilisation avancée
