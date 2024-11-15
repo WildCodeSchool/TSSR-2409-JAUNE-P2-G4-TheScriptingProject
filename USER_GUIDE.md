@@ -32,7 +32,10 @@ Si vous êtes dans le dossier contenant le script PowerShell, lancez-le simpleme
 ```powershell
 ./nom_du_script.ps1
 ```
+![ menu Powershell](./Images/powershell2.png)
+![ menu Debian](./Images/linuxAction.png)
 # II. Utilisation avancée
+
 
 
 # III. F.A.Q.
