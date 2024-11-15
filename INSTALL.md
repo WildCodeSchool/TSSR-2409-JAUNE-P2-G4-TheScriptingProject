@@ -3,7 +3,6 @@
     - Désactiver les pare-feux
     - Configurer la fonctionnalité SSH
     - Configurer la fonctionnalité WinRM
-    - Configurer C:\Windows\System32\drivers\etc\hosts
     - Installer PowerShell 7
 - Serveur Linux sous Debian 12
     - Configurer la fonctionnalité SSH
@@ -19,65 +18,43 @@
     - Configurer /etc/hosts
     - Modification du mot de passe root
 
+___
+___
+
 # II. Installation et Configuration
-## Désactivation Pare-feux
-
-## Configuration SSH et WinRM
-- Windows
-    - Configurer le service SSH sur le serveur
-        - Installer OpenSSH Server grâce à cette commande PowerShell à exécuter en tant qu'administrateur : `Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0`
-        - Ensuite, démarrer le service : `Start-Service sshd`
-        - Puis configurer le service pour qu'il démarre automatiquement : `Set-Service -Name sshd -StartupType "Automatic"`
-    - Configurer le service SSH sur le client : `Add-WindowsCapability -Online -Name OpenSSH.Client`
-    - Générer une clé SSH avec la commande suivante :
-       ```
-       ssh-keygen -t rsa -b 4096
-       ```
-       et la partagé au client avec la commande :
-
-        ```
-        ssh-copy-id utilisateur@ip_machine_client
-        ```
-  - Vérification de la connexion shh avec la commande :
-  ```
-    ssh root@adresseIp 172.16.40.30
-  ```
-    - Configurer WinRM sur le serveur
-        - Démarrer le service WinRM : `Start-Service -Name WinRM`
-        - Puis configurer le service pour qu'il démarre automatiquement : `Set-Service -Name WinRM -StartupType "Automatic"`
-        - Configurer les hôtes de confiance pour les connexion : `Set-Item WSMan:\localhost\Client\TrustedHosts "172.16.40.20, cliwin01"`
-    - Configurer WinRM sur le client
-        - Démarrer le service WinRM : `Start-Service -Name WinRM`
-        - Puis configurer le service pour qu'il démarre automatiquement : `Set-Service -Name WinRM -StartupType "Automatic"`
-    - Créer ou configurer un compte Administrateur sur le client 
-    - Créer une session PSSession sur le serveur : `New-PSSession -ComputerName Cliwin01 -Credential Cliwin01\Administrateur`
-    
-- Linux
-    - Sur le serveur Debian
-        ```
-        sudo apt update
-        sudo apt install openssh-server
-        sudo service ssh start
-        sudo systemctl enable ssh
-        ```
-    - Sur le client Ubuntu
-        `sudo apt install openssh-client`
-      
-  - Modification du mot de passe root
-        ```
-        sudo passwd root 
-        ```
-
-## Configuration fichiers Hosts
-- Windows
-- Linux
-    Dans /etc/hosts, ajouter les lignes suivantes :
-    ```
-    172.16.40.10    SRVLX01
-    172.16.40.30    CLILIN01
-    ```
-## Installation Powershell 7
-
+## Serveur Windows sous Windows Server 2022
+### Désactiver les pare-feux
+### Configurer la fonctionnalité SSH
+- Installer OpenSSH Server grâce à cette commande PowerShell à exécuter en tant qu'administrateur :
+```
+        Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+```
+- Ensuite, démarrer le service :
+```
+        Start-Service sshd
+```
+- Puis configurer le service pour qu'il démarre automatiquement :
+```
+        Set-Service -Name sshd -StartupType "Automatic"
+```
+### Configurer la fonctionnalité WinRM
+- Démarrer le service WinRM :
+```
+        Start-Service -Name WinRM
+```
+- Puis configurer le service pour qu'il démarre automatiquement :
+```
+        Set-Service -Name WinRM -StartupType "Automatic"
+```
+- Configurer les hôtes de confiance pour les connexion :
+```
+        Set-Item WSMan:\localhost\Client\TrustedHosts "172.16.40.20, cliwin01"
+```
+- Créer une session PSSession sur le serveur :
+```
+        New-PSSession -ComputerName Cliwin01 -Credential Cliwin01\Administrateur
+```
+### Installer PowerShell 7
 - 1 - Téléchargez PowerShell 7 :
 
     - Ouvrez votre navigateur sur le serveur.
@@ -100,12 +77,56 @@
     - Tapez pwsh pour démarrer PowerShell 7.
     - Pour confirmer la version, exécutez la commande suivante dans PowerShell 7 :
 ```
-Powershell
-
-$PSVersionTable.PSVersion
+        $PSVersionTable.PSVersion
+```
+___
+## Serveur Linux sous Debian 12
+### Configurer la fonctionnalité SSH
+- Installer la fonctionnalité SSH
+ ```
+        sudo apt update
+        sudo apt install openssh-server
+        sudo service ssh start
+        sudo systemctl enable ssh
 ```
 
-## Installer NuGet
+- Générer une clé SSH avec la commande suivante :
+```
+        ssh-keygen -t rsa -b 4096
+```
+et la partagé au client avec la commande :
+
+```
+        ssh-copy-id utilisateur@ip_machine_client
+```
+- Vérification de la connexion shh avec la commande :
+```
+        ssh root@adresseIp 172.16.40.30
+```
+
+### Configurer /etc/hosts
+Dans /etc/hosts, ajouter les lignes suivantes :
+```
+        172.16.40.10    SRVLX01
+        172.16.40.30    CLILIN01
+```
+___
+## Client Windows sous Windows 10
+### Désactiver les pare-feux
+### Configurer la fonctionnalité SSH
+```
+        Add-WindowsCapability -Online -Name OpenSSH.Client
+```
+### Configurer la fonctionnalité WinRM
+- Démarrer le service WinRM :
+```
+        Start-Service -Name WinRM
+```
+- Puis configurer le service pour qu'il démarre automatiquement :
+```
+        Set-Service -Name WinRM -StartupType "Automatic"
+```
+### Installer Fonctionnalité NuGet
 
  1- Ouvrez PowerShell 7 en tant qu’administrateur.
 
@@ -114,16 +135,14 @@ $PSVersionTable.PSVersion
     - Si vous n’avez jamais utilisé NuGet dans PowerShell, vous devez d’abord installer le fournisseur NuGet. PowerShell le proposera automatiquement lors de la première utilisation de la commande Install-Module.
    Exemple, exécutez la commande suivante pour installer un module depuis la galerie PowerShell. Cela déclenchera l’installation du fournisseur NuGet :
 ```
-Powershell
-Install-Module -Name PackageManagement -Force
+        Install-Module -Name PackageManagement -Force
 ```
 
 Exécutez la commande suivante pour voir la liste des sources de packages disponibles NuGet devrait être présent dans la liste des sources de packages.:
 ```
-Powershell
-Get-PackageSource
+        Get-PackageSource
 ```
-## Activer le bureau distant sur le client
+### Activer le Bureau distant
 
  - Activer le Bureau à distance via les Paramètres de Windows
 
@@ -140,17 +159,32 @@ Get-PackageSource
         Dans la section Bureau à distance, faites glisser le bouton Activer le Bureau à distance sur Activé.
         Une fenêtre de confirmation apparaît. Cliquez sur Confirmer pour activer le Bureau à distance.
 
+### Installer Module PSWindowsUpdate
 
-## Installer le module PSWindowsUpdate sur le client
+- 1 - Ouvrez PowerShell en tant qu'administrateur.
 
- - Suivre les étapes suivantes :
-
-    - 1 - Ouvrez PowerShell en tant qu'administrateur.
-
-    - 2 - Exécutez la commande suivante pour installer le module directement depuis la PowerShell Gallery :
+- 2 - Exécutez la commande suivante pour installer le module directement depuis la PowerShell Gallery :
 ```
-Powershell
-Install-Module -Name PSWindowsUpdate -Force
+        Powershell
+        Install-Module -Name PSWindowsUpdate -Force
+        Import-Module -Name PSWindowsUpdate
+        Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force
 ```
- PSWindowsUpdate est maintenant installé et prêt à être utilisé 
-
+- PSWindowsUpdate est maintenant installé et prêt à être utilisé 
+### Créer ou configurer un compte Administrateur sur le client 
+___
+## Client Linux sous Ubuntu 24.04
+### Configurer la fonctionnalité SSH
+```
+sudo apt install openssh-client
+```
+### Configurer /etc/hosts
+Dans /etc/hosts, ajouter les lignes suivantes :
+```
+        172.16.40.10    SRVLX01
+        172.16.40.30    CLILIN01
+```
+### Modification du mot de passe root
+```
+        sudo passwd root 
+```
